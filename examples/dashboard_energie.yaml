@@ -1,0 +1,26 @@
+# Exemplu dashboard Lovelace — card entities
+# Adaugă în dashboard după instalarea integrării
+
+type: vertical-stack
+title: Energie România
+cards:
+  - type: markdown
+    content: "## Premier Energy (Gaze)"
+  - type: entities
+    entities:
+      - entity: sensor.premier_energy_factura_suma
+      - entity: sensor.premier_energy_factura_numar
+      - entity: sensor.premier_energy_scadenta
+      - entity: binary_sensor.premier_energy_conectat
+      - entity: button.premier_energy_reinprospateaza_sesiunea
+  - type: markdown
+    content: "## Hidroelectrica (Electricitate)"
+  - type: entities
+    entities:
+      - entity: sensor.hidroelectrica_factura_suma
+      - entity: sensor.hidroelectrica_factura_numar
+      - entity: sensor.hidroelectrica_pod
+      - entity: sensor.hidroelectrica_index_curent
+      - entity: binary_sensor.hidroelectrica_sesiune_ok
+      - entity: binary_sensor.hidroelectrica_perioada_autocitire
+      - entity: button.hidroelectrica_reinprospateaza_sesiunea

@@ -1,0 +1,26 @@
+name: Config Flow Issue
+description: Login or setup fails during integration add
+title: "[Config Flow]: "
+labels: ["config-flow", "triage"]
+body:
+  - type: dropdown
+    id: integration
+    attributes:
+      label: Integration
+      options:
+        - premier_energy
+        - hidroelectrica
+  - type: textarea
+    id: error
+    attributes:
+      label: Error shown in UI
+    validations:
+      required: true
+  - type: checkboxes
+    id: chromium
+    attributes:
+      label: System checks
+      options:
+        - label: Chromium exists at /usr/bin/chromium (HA OS default)
+        - label: ChromeDriver exists at /usr/bin/chromedriver
+        - label: Xvfb exists at /usr/bin/Xvfb (Hidro only)

@@ -1,0 +1,12 @@
+# Weekly health check automation (optional)
+alias: Energie — health check săptămânal
+description: Force refresh if integrations degraded
+mode: single
+triggers:
+  - trigger: time
+    at: "04:00:00"
+    weekday:
+      - mon
+actions:
+  - action: premier_energy.refresh_session
+  - action: hidroelectrica.refresh_session

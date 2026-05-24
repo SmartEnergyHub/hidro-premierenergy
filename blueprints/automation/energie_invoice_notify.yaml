@@ -1,0 +1,44 @@
+blueprint:
+  name: Energie — Notificare factură nouă
+  description: Notifică când se schimbă numărul facturii Premier sau Hidro
+  domain: automation
+  input:
+    premier_invoice_entity:
+      name: Senzor număr factură Premier
+      selector:
+        entity:
+          filter:
+            - integration: premier_energy
+              domain: sensor
+    hidro_invoice_entity:
+      name: Senzor număr factură Hidro
+      selector:
+        entity:
+          filter:
+            - integration: hidroelectrica
+              domain: sensor
+    notify_service:
+      name: Serviciu notificare
+      default: notify.mobile_app
+      selector:
+        text:
+  source_url: https://github.com/johnny29/hidro-premierenergy
+
+trigger:
+  - platform: state
+    entity_id: !input premier_invoice_entity
+  - platform: state
+    entity_id: !input hidro_invoice_entity
+
+condition:
+  - condition: template
+    value_template: "{{ trigger.to_state.state not in ['unknown', 'unavailable', ''] }}"
+
+action:
+  - service: "{{ notify_service }}"
+    data:
+      title: "Factură energie"
+      message: >
+        {{ trigger.entity_id }}: factură nouă {{ trigger.to_state.state }}
+
+mode: single

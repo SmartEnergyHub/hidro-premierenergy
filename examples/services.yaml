@@ -1,0 +1,16 @@
+# Download latest invoice PDF (Premier)
+service: premier_energy.download_invoice
+data:
+  invoice_number: "001111468965"
+
+---
+# Force session recovery (Hidro)
+service: hidroelectrica.force_login
+
+---
+# Refresh all data
+service: hidroelectrica.refresh_session
+
+---
+# Export debug info to logs (no secrets)
+service: premier_energy.export_debug
