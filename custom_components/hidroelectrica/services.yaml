@@ -1,0 +1,38 @@
+refresh_session:
+  fields:
+    entry_id:
+      selector:
+        text:
+
+force_login:
+  fields:
+    entry_id:
+      selector:
+        text:
+
+download_invoice:
+  fields:
+    invoice_number:
+      required: true
+      selector:
+        text:
+    entry_id:
+      selector:
+        text:
+
+send_index:
+  fields:
+    entry_id:
+      selector:
+        text:
+    index:
+      selector:
+        number:
+          min: 0
+          max: 9999999
+
+export_debug:
+  fields:
+    entry_id:
+      selector:
+        text:

@@ -1,0 +1,41 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Hidroelectrica",
+        "description": "Introdu user și parola contului ihidro.ro. Sesiunea, cookies și CSRF sunt gestionate automat (inclusiv reCAPTCHA via Xvfb).",
+        "data": {
+          "username": "Utilizator",
+          "password": "Parolă",
+          "telegram_bot_token": "Telegram bot token (opțional)",
+          "telegram_chat_id": "Telegram chat ID (opțional)"
+        }
+      }
+    },
+    "error": {
+      "invalid_auth": "Autentificare eșuată. Verifică user/parolă."
+    },
+    "abort": {
+      "already_configured": "Contul este deja configurat."
+    }
+  },
+  "entity": {
+    "sensor": {
+      "invoice_amount": { "name": "Factură sumă" },
+      "invoice_number": { "name": "Factură număr" },
+      "due_date": { "name": "Scadență" },
+      "pod": { "name": "POD" },
+      "balance": { "name": "Sold" },
+      "index_current": { "name": "Index curent" },
+      "consumption_avg": { "name": "Consum mediu" }
+    },
+    "binary_sensor": {
+      "session_ok": { "name": "Sesiune OK" },
+      "self_reading_period": { "name": "Perioadă autocitire" }
+    },
+    "button": {
+      "refresh_session": { "name": "Reîmprospătează sesiunea" },
+      "force_login": { "name": "Re-login forțat" }
+    }
+  }
+}

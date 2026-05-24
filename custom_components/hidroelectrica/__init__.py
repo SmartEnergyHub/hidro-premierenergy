@@ -1,0 +1,92 @@
+"""Hidroelectrica integration setup."""
+
+from __future__ import annotations
+
+import logging
+
+import voluptuous as vol
+from homeassistant.config_entries import ConfigEntry
+from homeassistant.core import HomeAssistant, ServiceCall
+from homeassistant.helpers import config_validation as cv
+
+from .const import (
+    DOMAIN,
+    PLATFORMS,
+    SERVICE_DOWNLOAD_INVOICE,
+    SERVICE_EXPORT_DEBUG,
+    SERVICE_FORCE_LOGIN,
+    SERVICE_REFRESH_SESSION,
+    SERVICE_SEND_INDEX,
+)
+from .coordinator import HidroCoordinator
+
+_LOGGER = logging.getLogger(__name__)
+
+
+async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
+    coordinator = HidroCoordinator(hass, entry)
+    await coordinator.async_config_entry_first_refresh()
+    hass.data.setdefault(DOMAIN, {})[entry.entry_id] = coordinator
+    await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
+    _register_services(hass)
+    return True
+
+
+async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
+    if unload_ok := await hass.config_entries.async_unload_platforms(entry, PLATFORMS):
+        hass.data[DOMAIN].pop(entry.entry_id)
+    return unload_ok
+
+
+def _register_services(hass: HomeAssistant) -> None:
+    if hass.services.has_service(DOMAIN, SERVICE_REFRESH_SESSION):
+        return
+
+    async def refresh_session(call: ServiceCall) -> None:
+        for coord in _coords(hass, call.data.get("entry_id")):
+            await coord.async_request_refresh()
+
+    async def force_login(call: ServiceCall) -> None:
+        for coord in _coords(hass, call.data.get("entry_id")):
+            await coord.async_force_login()
+
+    async def download_invoice(call: ServiceCall) -> None:
+        inv = call.data["invoice_number"]
+        for coord in _coords(hass, call.data.get("entry_id")):
+            path = await coord.async_download_invoice(inv)
+            _LOGGER.info("Hidro PDF: %s", path)
+
+    async def send_index(call: ServiceCall) -> None:
+        index_val = call.data.get("index")
+        _LOGGER.info("send_index called with index=%s (extend via send_index module)", index_val)
+
+    async def export_debug(call: ServiceCall) -> None:
+        for coord in _coords(hass, call.data.get("entry_id")):
+            _LOGGER.info("Hidro debug: %s", coord.export_debug())
+
+    schema_entry = vol.Schema({vol.Optional("entry_id"): cv.string})
+    hass.services.async_register(
+        DOMAIN, SERVICE_REFRESH_SESSION, refresh_session, schema=schema_entry
+    )
+    hass.services.async_register(DOMAIN, SERVICE_FORCE_LOGIN, force_login, schema=schema_entry)
+    hass.services.async_register(
+        DOMAIN,
+        SERVICE_DOWNLOAD_INVOICE,
+        download_invoice,
+        schema=schema_entry.extend({vol.Required("invoice_number"): cv.string}),
+    )
+    hass.services.async_register(
+        DOMAIN,
+        SERVICE_SEND_INDEX,
+        send_index,
+        schema=schema_entry.extend({vol.Optional("index"): vol.Coerce(int)}),
+    )
+    hass.services.async_register(DOMAIN, SERVICE_EXPORT_DEBUG, export_debug, schema=schema_entry)
+
+
+def _coords(hass: HomeAssistant, entry_id: str | None):
+    data = hass.data.get(DOMAIN, {})
+    if entry_id:
+        yield data[entry_id]
+    else:
+        yield from data.values()
