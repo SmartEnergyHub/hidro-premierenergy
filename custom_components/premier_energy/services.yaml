@@ -1,0 +1,42 @@
+refresh_session:
+  fields:
+    entry_id:
+      example: "abc123"
+      selector:
+        text:
+
+force_login:
+  fields:
+    entry_id:
+      example: "abc123"
+      selector:
+        text:
+
+download_invoice:
+  fields:
+    invoice_number:
+      required: true
+      example: "001111468965"
+      selector:
+        text:
+    entry_id:
+      selector:
+        text:
+
+send_index:
+  fields:
+    entry_id:
+      selector:
+        text:
+    index:
+      selector:
+        number:
+          min: 0
+          max: 9999999
+          mode: box
+
+export_debug:
+  fields:
+    entry_id:
+      selector:
+        text:

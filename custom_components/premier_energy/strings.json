@@ -1,0 +1,38 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Premier Energy",
+        "description": "Introdu email și parola contului Premier Energy (my.premierenergy.ro). Autentificarea și token-ul JWT sunt gestionate automat.",
+        "data": {
+          "email": "Email",
+          "password": "Parolă"
+        }
+      }
+    },
+    "error": {
+      "invalid_auth": "Autentificare eșuată. Verifică email/parolă."
+    },
+    "abort": {
+      "already_configured": "Contul este deja configurat."
+    }
+  },
+  "entity": {
+    "sensor": {
+      "invoice_amount": { "name": "Factură sumă" },
+      "invoice_number": { "name": "Factură număr" },
+      "due_date": { "name": "Scadență" },
+      "consumption_m3": { "name": "Consum m³" },
+      "consumption_mwh": { "name": "Consum MWh" },
+      "address": { "name": "Adresă" },
+      "token_margin": { "name": "Token expiră în" }
+    },
+    "binary_sensor": {
+      "connected": { "name": "Conectat" }
+    },
+    "button": {
+      "refresh_session": { "name": "Reîmprospătează sesiunea" },
+      "force_login": { "name": "Re-login forțat" }
+    }
+  }
+}
