@@ -1,86 +1,65 @@
-# HA Energie Romania
+# HA Energie România
 
 [![hacs_badge](https://img.shields.io/badge/HACS-Custom-orange.svg)](https://github.com/hacs/integration)
 [![GitHub release](https://img.shields.io/github/v/release/johnny29/hidro-premierenergy)](https://github.com/johnny29/hidro-premierenergy/releases)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-Custom Home Assistant integrations for Romanian utility portals — **FULL AUTO**, production-ready.
+Integrări custom Home Assistant pentru portalurile românești de utilități — **FULL AUTO**, gata de producție.
 
-| Integration | Provider | Auth |
-|-------------|----------|------|
-| **premier_energy** | Premier Energy (gaze) | Azure B2C JWT |
-| **hidroelectrica** | Hidroelectrica (electricitate) | iHidro + reCAPTCHA |
+| Integrare | Furnizor | Tip | Portal |
+|-----------|----------|-----|--------|
+| **Premier Energy** | Premier Energy | **Gaze naturale** | [my.premierenergy.ro](https://my.premierenergy.ro) |
+| **Hidroelectrica** | Hidroelectrica | **Energie electrică** | [ihidro.ro/portal](https://ihidro.ro/portal/) |
 
-> Enter **email/password** or **username/password** once. No cookies, tokens, F12, or manual YAML.
-
----
-
-## Features
-
-### Both integrations
-- Config Flow UI (no YAML editing)
-- Auto-login & auto-refresh
-- Self-healing with retry + watchdog
-- Recovery after HA reboot
-- Diagnostics (secrets redacted)
-- Services: refresh, force login, PDF, debug export
-
-### Premier Energy
-- Invoice amount, number, due date
-- Gas consumption (m³ / MWh)
-- Address & reading period
-- JWT refresh every 10 min
-
-### Hidroelectrica
-- Invoice, POD, balance, meter index
-- Self-reading period sensor
-- Session keepalive every 5 min
-- Xvfb + headed Chromium for reCAPTCHA
+> Introdu **email/parolă** sau **user/parolă** o singură dată în UI. Fără cookies manuale, token F12 sau YAML pentru credențiale.
 
 ---
 
-## Compatibility
+## Documentație
 
-| Component | Minimum |
-|-----------|---------|
-| Home Assistant | 2024.12.0 |
-| HACS | 1.34.0 |
-| Python | 3.11+ (HA bundled) |
-| Chromium | `/usr/bin/chromium` |
-| ChromeDriver | `/usr/bin/chromedriver` |
-| Xvfb | `/usr/bin/Xvfb` (Hidro only) |
-
-| Platform | Supported |
-|----------|-----------|
-| Home Assistant OS | ✅ Recommended |
-| Supervised | ✅ |
-| Container | ⚠️ Requires Chromium/Xvfb in container |
-| Core (venv) | ⚠️ Manual Chromium setup |
-
-| Architecture | Supported |
-|--------------|-----------|
-| Raspberry Pi (ARM) | ✅ |
-| x86-64 | ✅ |
+| Document | Conținut |
+|----------|----------|
+| **[docs/INSTALLATION.md](docs/INSTALLATION.md)** | **Ghid complet instalare** — dependențe, pași, verificări SSH |
+| [docs/MIGRATION.md](docs/MIGRATION.md) | Migrare de la shell_command / scripturi legacy |
+| [docs/TROUBLESHOOTING.md](docs/TROUBLESHOOTING.md) | Depanare |
+| [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) | Arhitectură tehnică |
 
 ---
 
-## Installation
+## Dependențe (rezumat)
 
-### HACS (recommended)
+| Dependență | Premier Energy (gaze naturale) | Hidroelectrica (energie electrică) |
+|------------|:------------------------------:|:----------------------------------:|
+| Home Assistant ≥ 2024.12 | ✅ | ✅ |
+| HACS ≥ 1.34 (opțional) | ✅ | ✅ |
+| Chromium + ChromeDriver | ✅ | ✅ |
+| Xvfb (display virtual) | — | ✅ obligatoriu |
+| Python: `requests`, `selenium` | auto (manifest) | auto (manifest) |
 
-1. **HACS** → **Integrations** → **⋮** → **Custom repositories**
-2. URL: `https://github.com/johnny29/hidro-premierenergy`
-3. Category: **Integration**
-4. **Download**
-5. **Restart Home Assistant**
-6. **Settings** → **Devices & Services** → **Add Integration**
-7. Search **Premier Energy** or **Hidroelectrica**
+Verificare rapidă pe HA OS (SSH):
+
+```bash
+which chromium chromedriver Xvfb
+```
+
+Detalii complete, variabile de mediu, instalare pe Docker/Core: **[docs/INSTALLATION.md](docs/INSTALLATION.md)**
+
+---
+
+## Instalare rapidă
+
+### HACS
+
+1. **HACS** → **Integrations** → **Custom repositories** → `https://github.com/johnny29/hidro-premierenergy`
+2. **Download** → **Restart HA**
+3. **Setări** → **Dispozitive și servicii** → **Adaugă integrare**
+4. Caută **Premier Energy** (gaze naturale) sau **Hidroelectrica** (energie electrică)
 
 ### Manual
 
 ```bash
 cd /config
-git clone https://github.com/johnny29/hidro-premierenergy.git /tmp/ha-energie
+git clone --depth 1 https://github.com/johnny29/hidro-premierenergy.git /tmp/ha-energie
 cp -r /tmp/ha-energie/custom_components/premier_energy custom_components/
 cp -r /tmp/ha-energie/custom_components/hidroelectrica custom_components/
 # Restart Home Assistant
@@ -88,116 +67,118 @@ cp -r /tmp/ha-energie/custom_components/hidroelectrica custom_components/
 
 ---
 
-## Quick start
+## Configurare
 
-### Premier Energy
-1. Add integration → enter **email** + **password** from [my.premierenergy.ro](https://my.premierenergy.ro)
-2. Entities appear under device **Premier Energy**
+### Premier Energy (gaze naturale)
 
-### Hidroelectrica
-1. Add integration → enter **username** + **password** from [ihidro.ro](https://ihidro.ro/portal/)
-2. Optional: Telegram bot token + chat ID for legacy notifications
-3. Entities appear under device **Hidroelectrica**
+1. Adaugă integrarea → email + parolă [my.premierenergy.ro](https://my.premierenergy.ro)
+2. Refresh automat token JWT la **10 minute**
+3. Entități: factură, scadență, consum m³/MWh, adresă, conectivitate
+
+### Hidroelectrica (energie electrică)
+
+1. Adaugă integrarea → user + parolă [ihidro.ro](https://ihidro.ro/portal/)
+2. Opțional: Telegram bot token + chat ID
+3. Refresh sesiune + date la **5 minute**; auto-login Xvfb pentru reCAPTCHA
+4. Entități: factură, POD, sold, index kWh, autocitire, conectivitate
 
 ---
 
-## Example dashboard
+## Carduri Lovelace
 
-See [examples/dashboard_energie.yaml](examples/dashboard_energie.yaml) — vertical stack with invoice sensors, connectivity, refresh buttons.
+| Fișier | Descriere |
+|--------|-----------|
+| [examples/lovelace_premier_energy.yaml](examples/lovelace_premier_energy.yaml) | Card complet **gaze naturale** |
+| [examples/lovelace_hidroelectrica.yaml](examples/lovelace_hidroelectrica.yaml) | Card complet **energie electrică** |
+| [examples/dashboard_energie.yaml](examples/dashboard_energie.yaml) | Dashboard combinat |
+
+> După instalare, verifică ID-urile entităților în **Instrumente pentru dezvoltatori → Stări** și adaptează YAML-ul.
 
 ```
-┌─────────────────────────────────┐
-│ Premier Energy (Gaze)           │
-│  Factură: 330.92 RON            │
-│  Scadență: 18/06/2026           │
-│  ● Conectat                     │
-│  [ Reîmprospătează sesiunea ]   │
-├─────────────────────────────────┤
-│ Hidroelectrica (Electricitate)  │
-│  Factură: 887.2 RON             │
-│  POD: 8000244846                │
-│  ● Sesiune OK                   │
-│  [ Re-login forțat ]            │
-└─────────────────────────────────┘
+┌─────────────────────────────────────┐
+│ Premier Energy (gaze naturale)      │
+│  Factură: 330.92 RON  │  Scadență  │
+│  Consum: 125 m³       │  ● Conectat│
+│  [ Reîmprospătează ] [ Re-login ]    │
+├─────────────────────────────────────┤
+│ Hidroelectrica (energie electrică)  │
+│  Factură: 887.2 RON   │  POD: …    │
+│  Index: 4521 kWh      │  ● Sesiune │
+│  ⚡ Autocitire activă               │
+│  [ Reîmprospătează ] [ Re-login ]   │
+└─────────────────────────────────────┘
 ```
 
 ---
 
-## Services
+## Funcționalități
 
-| Service | Description |
-|---------|-------------|
-| `premier_energy.refresh_session` | Refresh JWT / data |
-| `premier_energy.force_login` | Force Azure B2C login |
-| `premier_energy.download_invoice` | Download PDF |
-| `hidroelectrica.refresh_session` | Keepalive + fetch |
-| `hidroelectrica.force_login` | Xvfb auto-login |
-| `hidroelectrica.download_invoice` | Download PDF |
-| `*.export_debug` | Log debug info (redacted) |
+### Ambele integrări
+- Config Flow UI (fără editare YAML pentru credențiale)
+- Auto-login și auto-refresh
+- Self-healing, retry, watchdog
+- Recovery după restart HA
+- Diagnostics (secrete mascate)
+- Servicii: refresh, force login, PDF, debug export
 
-Examples: [examples/services.yaml](examples/services.yaml)
+### Premier Energy (gaze naturale)
+- Sumă / număr factură, scadență
+- Consum m³ și MWh
+- Adresă loc de consum
+- JWT refresh la 10 min (Azure B2C)
 
----
-
-## Architecture
-
-```
-Config Flow (credentials)
-        ↓
-DataUpdateCoordinator (async)
-        ↓
-Executor → AuthManager / SessionManager
-        ↓
-API → Sensors / Binary sensors / Buttons
-```
-
-Details: [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) · [Auth flows](docs/AUTH_FLOWS.md)
+### Hidroelectrica (energie electrică)
+- Factură, POD, sold, index contor
+- Senzor perioadă autocitire
+- Keepalive sesiune la 5 min
+- Xvfb + Chromium headed (reCAPTCHA)
 
 ---
 
-## Troubleshooting
+## Servicii
 
-| Symptom | Action |
-|---------|--------|
-| `invalid_auth` at setup | Verify portal credentials in browser |
-| Hidro captcha fail | Ensure Xvfb: `ls /usr/bin/Xvfb` |
-| Chromium lock timeout | Wait 3 min; check stuck processes |
-| Stale data | Press **Refresh session** button |
+| Serviciu | Integrare |
+|----------|-----------|
+| `premier_energy.refresh_session` | Gaze naturale |
+| `premier_energy.force_login` | Gaze naturale |
+| `premier_energy.download_invoice` | Gaze naturale |
+| `hidroelectrica.refresh_session` | Energie electrică |
+| `hidroelectrica.force_login` | Energie electrică |
+| `hidroelectrica.download_invoice` | Energie electrică |
 
-Full guide: [docs/TROUBLESHOOTING.md](docs/TROUBLESHOOTING.md) · [FAQ](docs/FAQ.md)
+Exemple: [examples/services.yaml](examples/services.yaml)
 
 ---
 
-## Migration from shell_command
+## Compatibilitate
 
-Legacy scripts in `/config/premier_energy/` and `/config/hidroelectrica/` can run in parallel during testing.
+| Platformă | Suport |
+|-----------|--------|
+| Home Assistant OS | ✅ Recomandat |
+| Supervised | ✅ |
+| Container | ⚠️ Chromium + Xvfb manual |
+| Core (venv) | ⚠️ Setup browser manual |
+| Raspberry Pi ARM64 | ✅ |
+| x86-64 | ✅ |
+
+---
+
+## Migrare legacy
+
+Scripturile din `/config/premier_energy/` și `/config/hidroelectrica/` **nu se șterg** automat. Dezactivează automatizările YAML duplicate după testare.
 
 [docs/MIGRATION.md](docs/MIGRATION.md)
 
 ---
 
-## Security
+## Securitate
 
-- Credentials encrypted by Home Assistant Config Entries
-- No secrets in this repository
-- Diagnostics redact passwords/tokens
-
-[SECURITY.md](SECURITY.md) · [docs/SECURITY.md](docs/SECURITY.md)
+- Credențiale criptate în Config Entries HA
+- Fără secrete în repository
+- [SECURITY.md](SECURITY.md)
 
 ---
 
-## Known limitations
+## Licență
 
-[docs/LIMITATIONS.md](docs/LIMITATIONS.md)
-
----
-
-## Contributing
-
-[CONTRIBUTING.md](CONTRIBUTING.md)
-
----
-
-## License
-
-[MIT](LICENSE) © HA Energie Romania Contributors
+[MIT](LICENSE) © HA Energie România Contributors

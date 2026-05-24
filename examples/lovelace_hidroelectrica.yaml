@@ -1,0 +1,104 @@
+# =============================================================================
+# Hidroelectrica — ENERGIE ELECTRICĂ
+# Card Lovelace (YAML) — copiază în dashboard sau include ca resursă
+#
+# ÎNAINTE DE UTILIZARE:
+#   Setări → Instrumente pentru dezvoltatori → Stări → filtrează "hidroelectrica"
+#   Înlocuiește entity_id-urile de mai jos cu cele din instalarea ta.
+# =============================================================================
+
+type: vertical-stack
+title: Hidroelectrica (energie electrică)
+cards:
+  # --- Banner autocitire ---
+  - type: conditional
+    conditions:
+      - entity: binary_sensor.hidroelectrica_perioada_autocitire
+        state: "on"
+    card:
+      type: markdown
+      content: "⚡ **Perioadă autocitire activă** — transmite indexul contorului pe ihidro.ro"
+
+  # --- Banner sesiune ---
+  - type: conditional
+    conditions:
+      - entity: binary_sensor.hidroelectrica_sesiune_ok
+        state: "off"
+    card:
+      type: markdown
+      content: "🔴 **Sesiune expirată** — apasă *Re-login forțat* (Xvfb + reCAPTCHA, ~2 min)"
+
+  # --- Sumar rapid ---
+  - type: glance
+    title: Factură energie electrică
+    show_name: true
+    show_icon: true
+    entities:
+      - entity: sensor.hidroelectrica_factura_suma
+        name: Sumă
+      - entity: sensor.hidroelectrica_scadenta
+        name: Scadență
+      - entity: sensor.hidroelectrica_index_curent
+        name: Index kWh
+      - entity: binary_sensor.hidroelectrica_sesiune_ok
+        name: Sesiune
+
+  # --- Detalii contract electric ---
+  - type: entities
+    title: Detalii contract electric
+    show_header_toggle: false
+    entities:
+      - entity: sensor.hidroelectrica_pod
+        name: POD
+        icon: mdi:transmission-tower
+      - entity: sensor.hidroelectrica_factura_numar
+        name: Număr factură
+        icon: mdi:file-document-outline
+      - entity: sensor.hidroelectrica_factura_suma
+        name: Sumă de plată
+        icon: mdi:cash
+      - entity: sensor.hidroelectrica_scadenta
+        name: Scadență
+        icon: mdi:calendar-clock
+      - entity: sensor.hidroelectrica_sold
+        name: Sold cont
+        icon: mdi:wallet
+      - entity: sensor.hidroelectrica_index_curent
+        name: Index contor curent
+        icon: mdi:counter
+      - entity: sensor.hidroelectrica_consum_mediu
+        name: Consum mediu lunar
+        icon: mdi:flash
+      - type: divider
+      - entity: binary_sensor.hidroelectrica_perioada_autocitire
+        name: Autocitire activă
+        icon: mdi:calendar-range
+      - entity: binary_sensor.hidroelectrica_sesiune_ok
+        name: Sesiune portal OK
+        icon: mdi:cloud-check
+
+  # --- Acțiuni ---
+  - type: horizontal-stack
+    cards:
+      - type: button
+        name: Reîmprospătează date
+        icon: mdi:refresh
+        tap_action:
+          action: call-service
+          service: button.press
+          target:
+            entity_id: button.hidroelectrica_reinprospateaza_sesiunea
+      - type: button
+        name: Re-login forțat
+        icon: mdi:login
+        tap_action:
+          action: call-service
+          service: button.press
+          target:
+            entity_id: button.hidroelectrica_re_login_fortat
+
+  # --- Exemplu: descărcare factură (automatizare) ---
+  # trigger: ...
+  # action: hidroelectrica.download_invoice
+  # data:
+  #   invoice_number: "{{ states('sensor.hidroelectrica_factura_numar') }}"

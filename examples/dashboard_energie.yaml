@@ -1,26 +1,63 @@
-# Exemplu dashboard Lovelace — card entities
-# Adaugă în dashboard după instalarea integrării
+# =============================================================================
+# Dashboard combinat — Premier Energy (gaze naturale) + Hidroelectrica (energie electrică)
+#
+# Adaugă ca „Manual card” (YAML) în Lovelace sau copiază secțiunile separate.
+# Vezi și:
+#   examples/lovelace_premier_energy.yaml
+#   examples/lovelace_hidroelectrica.yaml
+# =============================================================================
 
 type: vertical-stack
-title: Energie România
+title: Energie — România
 cards:
   - type: markdown
-    content: "## Premier Energy (Gaze)"
-  - type: entities
+    content: |
+      ## 🟠 Premier Energy — **gaze naturale**
+      Portal: [my.premierenergy.ro](https://my.premierenergy.ro)
+
+  - type: glance
     entities:
       - entity: sensor.premier_energy_factura_suma
-      - entity: sensor.premier_energy_factura_numar
+        name: Factură gaze
       - entity: sensor.premier_energy_scadenta
+        name: Scadență
+      - entity: sensor.premier_energy_consum_m3
+        name: m³
       - entity: binary_sensor.premier_energy_conectat
-      - entity: button.premier_energy_reinprospateaza_sesiunea
-  - type: markdown
-    content: "## Hidroelectrica (Electricitate)"
+        name: Online
+
   - type: entities
+    title: Premier Energy (gaze naturale)
+    entities:
+      - sensor.premier_energy_factura_numar
+      - sensor.premier_energy_adresa
+      - sensor.premier_energy_consum_mwh
+      - button.premier_energy_reinprospateaza_sesiunea
+      - button.premier_energy_re_login_fortat
+
+  - type: divider
+
+  - type: markdown
+    content: |
+      ## ⚡ Hidroelectrica — **energie electrică**
+      Portal: [ihidro.ro](https://ihidro.ro/portal/)
+
+  - type: glance
     entities:
       - entity: sensor.hidroelectrica_factura_suma
-      - entity: sensor.hidroelectrica_factura_numar
-      - entity: sensor.hidroelectrica_pod
+        name: Factură electric
+      - entity: sensor.hidroelectrica_scadenta
+        name: Scadență
       - entity: sensor.hidroelectrica_index_curent
+        name: Index kWh
       - entity: binary_sensor.hidroelectrica_sesiune_ok
-      - entity: binary_sensor.hidroelectrica_perioada_autocitire
-      - entity: button.hidroelectrica_reinprospateaza_sesiunea
+        name: Sesiune
+
+  - type: entities
+    title: Hidroelectrica (energie electrică)
+    entities:
+      - sensor.hidroelectrica_pod
+      - sensor.hidroelectrica_sold
+      - binary_sensor.hidroelectrica_perioada_autocitire
+      - button.hidroelectrica_reinprospateaza_sesiunea
+      - button.hidroelectrica_re_login_fortat

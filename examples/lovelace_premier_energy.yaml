@@ -1,0 +1,95 @@
+# =============================================================================
+# Premier Energy — GAZE NATURALE
+# Card Lovelace (YAML) — copiază în dashboard sau include ca resursă
+#
+# ÎNAINTE DE UTILIZARE:
+#   Setări → Instrumente pentru dezvoltatori → Stări → filtrează "premier_energy"
+#   Înlocuiește entity_id-urile de mai jos cu cele din instalarea ta.
+# =============================================================================
+
+type: vertical-stack
+title: Premier Energy (gaze naturale)
+cards:
+  # --- Banner stare conexiune ---
+  - type: conditional
+    conditions:
+      - entity: binary_sensor.premier_energy_conectat
+        state: "on"
+    card:
+      type: markdown
+      content: "🟢 **Premier Energy** — token JWT valid, portal conectat"
+  - type: conditional
+    conditions:
+      - entity: binary_sensor.premier_energy_conectat
+        state: "off"
+    card:
+      type: markdown
+      content: "🔴 **Premier Energy** — token expirat. Apasă *Re-login forțat*."
+
+  # --- Sumar rapid ---
+  - type: glance
+    title: Factură gaze naturale
+    show_name: true
+    show_icon: true
+    entities:
+      - entity: sensor.premier_energy_factura_suma
+        name: Sumă
+      - entity: sensor.premier_energy_scadenta
+        name: Scadență
+      - entity: sensor.premier_energy_consum_m3
+        name: Consum m³
+      - entity: binary_sensor.premier_energy_conectat
+        name: Conectat
+
+  # --- Detalii ---
+  - type: entities
+    title: Detalii contract gaze
+    show_header_toggle: false
+    entities:
+      - entity: sensor.premier_energy_factura_numar
+        name: Număr factură
+        icon: mdi:file-document-outline
+      - entity: sensor.premier_energy_factura_suma
+        name: Sumă de plată
+        icon: mdi:cash
+      - entity: sensor.premier_energy_scadenta
+        name: Scadență
+        icon: mdi:calendar-clock
+      - entity: sensor.premier_energy_adresa
+        name: Adresă loc consum
+        icon: mdi:map-marker
+      - entity: sensor.premier_energy_consum_m3
+        name: Consum (m³)
+        icon: mdi:meter-gas
+      - entity: sensor.premier_energy_consum_mwh
+        name: Consum (MWh)
+        icon: mdi:fire
+      - type: divider
+      - entity: binary_sensor.premier_energy_conectat
+        name: Token valid
+        icon: mdi:key-variant
+
+  # --- Acțiuni ---
+  - type: horizontal-stack
+    cards:
+      - type: button
+        name: Reîmprospătează
+        icon: mdi:refresh
+        tap_action:
+          action: call-service
+          service: button.press
+          target:
+            entity_id: button.premier_energy_reinprospateaza_sesiunea
+      - type: button
+        name: Re-login forțat
+        icon: mdi:login
+        tap_action:
+          action: call-service
+          service: button.press
+          target:
+            entity_id: button.premier_energy_re_login_fortat
+
+  # --- Card entități alternativ (minimal) ---
+  # type: entity
+  # entity: sensor.premier_energy_factura_suma
+  # name: Factură gaze naturale

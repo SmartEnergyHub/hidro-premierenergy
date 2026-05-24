@@ -1,13 +1,13 @@
 {
   "domain": "premier_energy",
-  "name": "Premier Energy",
+  "name": "Premier Energy (gaze naturale)",
   "codeowners": ["@johnny29"],
   "config_flow": true,
   "dependencies": [],
-  "documentation": "https://github.com/johnny29/hidro-premierenergy/blob/main/docs/ARCHITECTURE.md",
+  "documentation": "https://github.com/johnny29/hidro-premierenergy/blob/main/docs/INSTALLATION.md",
   "integration_type": "service",
   "iot_class": "cloud_polling",
   "issue_tracker": "https://github.com/johnny29/hidro-premierenergy/issues",
   "requirements": ["requests>=2.31.0", "selenium>=4.15.0"],
-  "version": "1.0.0"
+  "version": "1.0.1"
 }

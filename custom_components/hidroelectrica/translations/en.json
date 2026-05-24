@@ -2,8 +2,8 @@
   "config": {
     "step": {
       "user": {
-        "title": "Hidroelectrica",
-        "description": "Introdu user și parola contului ihidro.ro. Sesiunea, cookies și CSRF sunt gestionate automat (inclusiv reCAPTCHA via Xvfb).",
+        "title": "Hidroelectrica (electricity)",
+        "description": "Enter username and password for ihidro.ro — electricity. Session, cookies and CSRF are managed automatically (reCAPTCHA via Xvfb).",
         "data": {
           "username": "Utilizator",
           "password": "Parolă",

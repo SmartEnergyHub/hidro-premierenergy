@@ -2,8 +2,8 @@
   "config": {
     "step": {
       "user": {
-        "title": "Premier Energy",
-        "description": "Introdu email și parola contului Premier Energy (my.premierenergy.ro). Autentificarea și token-ul JWT sunt gestionate automat.",
+        "title": "Premier Energy (natural gas)",
+        "description": "Enter email and password for Premier Energy — natural gas (my.premierenergy.ro). JWT authentication is fully automatic.",
         "data": {
           "email": "Email",
           "password": "Parolă"

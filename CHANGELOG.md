@@ -3,6 +3,18 @@
 All notable changes to this project are documented here.
 Format based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [1.0.1] - 2026-05-24
+
+### Added
+- **docs/INSTALLATION.md** — ghid complet instalare (dependențe, pași, verificări SSH)
+- **examples/lovelace_premier_energy.yaml** — card Lovelace Premier Energy (gaze naturale)
+- **examples/lovelace_hidroelectrica.yaml** — card Lovelace Hidroelectrica (energie electrică)
+
+### Changed
+- README rescris: dependențe, pași instalare, link-uri documentație
+- Denumiri integrări: **Premier Energy (gaze naturale)**, **Hidroelectrica (energie electrică)**
+- `dashboard_energie.yaml` actualizat cu exemple combinate
+
 ## [1.0.0] - 2026-05-24
 
 ### Added
