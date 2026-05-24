@@ -3,6 +3,14 @@
 All notable changes to this project are documented here.
 Format based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [1.1.2] - 2026-05-25
+
+### Fixed
+- **Hidroelectrica sesiune/cookies:** recovery robust după restart HA (auto-login + fallback cookies_import)
+- Cale canonică `/config/hidroelectrica/session.json`, validare multi-pagină, normalizare domeniu cookies
+- Recovery automat la 90s după `homeassistant_started` (ca Premier Energy)
+- Mesaje fără `import_session.py` — folosește butonul **Re-login forțat**
+
 ## [1.1.1] - 2026-05-24
 
 ### Changed

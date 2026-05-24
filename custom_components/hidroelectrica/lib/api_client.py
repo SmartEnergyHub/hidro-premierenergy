@@ -9,19 +9,23 @@ from .backup import backup_files
 from .config import DATA_FILE, INVOICES_DIR, PORTAL_BASE, PORTAL_PAGES
 from .hidro_api import fetch_all_portal_data, load_page
 from .logging_util import setup_logger
-from .session import extract_csrf_from_html, requests_session_from_store, validate_session
+from .session import extract_csrf_from_html, requests_session_from_store
 
 log = setup_logger("hidro.api")
 
 
 def fetch_all_data(use_browser: bool = False) -> dict[str, Any]:
+    from .ha_session import ensure_session
+
     if DATA_FILE.is_file():
         backup_files([DATA_FILE], label="pre_data_fetch")
 
-    http = requests_session_from_store()
-    if not validate_session(http):
-        raise RuntimeError("Sesiune invalidă — rulează import_session.py cu cookies noi")
+    if not ensure_session():
+        raise RuntimeError(
+            "Sesiune invalidă — apasă butonul Re-login forțat (integrare Hidroelectrica)"
+        )
 
+    http = requests_session_from_store()
     data = fetch_all_portal_data(http)
     DATA_FILE.write_text(json.dumps(data, indent=2, ensure_ascii=False), encoding="utf-8")
     log.info("data.json updated — POD=%s facturi=%d", data.get("pod"), len(data.get("facturi", [])))
@@ -48,9 +52,11 @@ def _ajax_headers(csrf: str) -> dict[str, str]:
 
 
 def download_invoice_pdf(invoice_id: str, enc_query: str | None = None) -> str | None:
-    http = requests_session_from_store()
-    if not validate_session(http):
+    from .ha_session import ensure_session
+
+    if not ensure_session():
         raise RuntimeError("Sesiune invalidă")
+    http = requests_session_from_store()
 
     token = enc_query
     if not token and DATA_FILE.is_file():

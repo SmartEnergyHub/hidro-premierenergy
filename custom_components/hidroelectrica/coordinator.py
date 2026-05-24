@@ -56,9 +56,17 @@ class HidroCoordinator(DataUpdateCoordinator[dict[str, Any]]):
         try:
             await self.hass.async_add_executor_job(self._prepare_sync_env)
             ok = await self.hass.async_add_executor_job(ensure_session)
+            if not ok:
+                from .lib.auto_login_core import auto_login_sync
+
+                _LOGGER.warning("Hidro: ensure_session failed — auto-login retry")
+                await self.hass.async_add_executor_job(auto_login_sync)
+                ok = await self.hass.async_add_executor_job(ensure_session)
             self.session_ok = ok
             if not ok:
-                raise RuntimeError("Session recovery failed")
+                raise RuntimeError(
+                    "session_expired_all_methods — apasă butonul Re-login forțat în HA"
+                )
 
             data = await self.hass.async_add_executor_job(fetch_all_data)
             data["health_status"] = "ok"
@@ -84,6 +92,14 @@ class HidroCoordinator(DataUpdateCoordinator[dict[str, Any]]):
         await self.hass.async_add_executor_job(self._prepare_sync_env)
         await self.hass.async_add_executor_job(auto_login_sync)
         await self.async_request_refresh()
+
+    async def async_refresh_session(self) -> None:
+        """Revalidate + touch session; auto-login dacă e invalid."""
+        await self.hass.async_add_executor_job(self._prepare_sync_env)
+        ok = await self.hass.async_add_executor_job(ensure_session)
+        self.session_ok = ok
+        if ok:
+            await self.async_request_refresh()
 
     async def async_download_invoice(self, invoice_number: str) -> str | None:
         await self.hass.async_add_executor_job(self._prepare_sync_env)

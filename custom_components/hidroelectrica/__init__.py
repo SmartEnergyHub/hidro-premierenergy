@@ -6,8 +6,9 @@ import logging
 
 import voluptuous as vol
 from homeassistant.config_entries import ConfigEntry
-from homeassistant.core import HomeAssistant, ServiceCall
+from homeassistant.core import CoreState, HomeAssistant, ServiceCall, callback
 from homeassistant.helpers import config_validation as cv
+from homeassistant.helpers.event import async_call_later
 
 from .const import (
     DOMAIN,
@@ -27,7 +28,23 @@ _LOGGER = logging.getLogger(__name__)
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     coordinator = HidroCoordinator(hass, entry)
     await coordinator.async_config_entry_first_refresh()
+
     hass.data.setdefault(DOMAIN, {})[entry.entry_id] = coordinator
+
+    @callback
+    def _on_ha_start(_event) -> None:
+        """Recovery sesiune după restart HA (cookies/token CSRF)."""
+
+        async def _delayed_refresh(_now) -> None:
+            if hass.state != CoreState.running:
+                return
+            _LOGGER.info("Hidroelectrica: session recovery la pornirea HA")
+            await coordinator.async_refresh_session()
+
+        async_call_later(hass, 90, _delayed_refresh)
+
+    entry.async_on_unload(hass.bus.async_listen_once("homeassistant_started", _on_ha_start))
+
     await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
     _register_services(hass)
     register_support_services(hass)
@@ -40,13 +57,18 @@ async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     return unload_ok
 
 
+async def async_reload_entry(hass: HomeAssistant, entry: ConfigEntry) -> None:
+    await async_unload_entry(hass, entry)
+    await async_setup_entry(hass, entry)
+
+
 def _register_services(hass: HomeAssistant) -> None:
     if hass.services.has_service(DOMAIN, SERVICE_REFRESH_SESSION):
         return
 
     async def refresh_session(call: ServiceCall) -> None:
         for coord in _coords(hass, call.data.get("entry_id")):
-            await coord.async_request_refresh()
+            await coord.async_refresh_session()
 
     async def force_login(call: ServiceCall) -> None:
         for coord in _coords(hass, call.data.get("entry_id")):

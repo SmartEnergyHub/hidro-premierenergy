@@ -10,7 +10,7 @@ import requests
 
 from .config import API_ENDPOINTS, PORTAL_BASE, PORTAL_PAGES
 from .logging_util import setup_logger
-from .session import extract_csrf_from_html, requests_session_from_store
+from .session import extract_csrf_from_html, is_login_page, requests_session_from_store
 
 log = setup_logger("hidro.api_wm")
 
@@ -36,8 +36,8 @@ def load_page(sess: requests.Session, page_key: str) -> tuple[str, str]:
     url = f"{PORTAL_BASE}/{path}"
     r = sess.get(url, timeout=60, allow_redirects=True)
     r.raise_for_status()
-    if "txtLogin" in r.text and "btnlogin" in r.text:
-        raise RuntimeError(f"Sesiune expirată la {path} — reimportă cookies")
+    if is_login_page(r.text, r.url):
+        raise RuntimeError(f"Sesiune expirată la {path} — Re-login forțat în HA")
     csrf = extract_csrf_from_html(r.text)
     return r.text, csrf
 

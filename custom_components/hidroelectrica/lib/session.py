@@ -103,10 +103,13 @@ def requests_session_from_store(session: dict[str, Any] | None = None) -> reques
         return sess
     for c in store.get("cookies", []):
         try:
+            domain = c.get("domain") or "ihidro.ro"
+            if domain and not domain.startswith(".") and "ihidro" in domain:
+                domain = f".{domain.lstrip('.')}"
             sess.cookies.set(
                 c["name"],
                 c["value"],
-                domain=c.get("domain"),
+                domain=domain,
                 path=c.get("path", "/"),
             )
         except Exception as exc:
@@ -206,11 +209,11 @@ def _session_from_cookies(cookies: list[dict[str, Any]], csrf: str = "") -> requ
     return requests_session_from_store(store)
 
 
-def try_recover_session(http: requests.Session | None = None) -> bool:
+def try_recover_session(http: requests.Session | None = None, *, force: bool = False) -> bool:
     imp = _cookies_import_file()
     if not imp.is_file():
         return False
-    if not cookies_import_is_fresher():
+    if not force and not cookies_import_is_fresher():
         log.info(
             "Skip recovery: cookies_import.json mai vechi decât session.json — "
             "nu suprascriu sesiunea activă"
@@ -227,23 +230,28 @@ def try_recover_session(http: requests.Session | None = None) -> bool:
 
 def validate_session(sess: requests.Session | None = None, *, touch: bool = True) -> bool:
     http = sess or requests_session_from_store()
-    url = f"{PORTAL_BASE}/BillingHistory.aspx"
-    try:
-        r = http.get(url, timeout=30, allow_redirects=True)
-        log.debug("validate BillingHistory -> %s len=%s", r.status_code, len(r.text))
-        if r.status_code != 200:
-            return False
-        if is_login_page(r.text, r.url):
-            log.info("Session invalid — login page detected (len=%s)", len(r.text))
-            return False
-        csrf = extract_csrf_from_html(r.text)
-        if csrf or is_authenticated_page(r.text):
-            if touch:
-                touch_session(http, r.text)
-            log.info("Session valid via BillingHistory.aspx")
-            return True
-    except Exception as exc:
-        log.debug("validate error: %s", exc)
+    urls = (
+        f"{PORTAL_BASE}/BillingHistory.aspx",
+        f"{PORTAL_BASE}/IndexHistory.aspx",
+        f"{PORTAL_BASE}/Dashboard.aspx",
+    )
+    for url in urls:
+        try:
+            r = http.get(url, timeout=30, allow_redirects=True)
+            log.debug("validate %s -> %s len=%s", url, r.status_code, len(r.text))
+            if r.status_code != 200:
+                continue
+            if is_login_page(r.text, r.url):
+                log.info("Session invalid — login page at %s (len=%s)", url, len(r.text))
+                continue
+            csrf = extract_csrf_from_html(r.text)
+            if csrf or is_authenticated_page(r.text):
+                if touch:
+                    touch_session(http, r.text)
+                log.info("Session valid via %s", url)
+                return True
+        except Exception as exc:
+            log.debug("validate error %s: %s", url, exc)
     return False
 
 

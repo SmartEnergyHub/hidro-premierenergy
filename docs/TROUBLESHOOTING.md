@@ -27,7 +27,30 @@
 - Xvfb required: `which Xvfb` → `/usr/bin/Xvfb`
 - Check reCAPTCHA errors in logs — headed browser must work (not headless)
 
-## Session keeps failing
+## Session keeps failing (Hidroelectrica)
+
+**Mesaj legacy** „Reimportă cookies / import_session.py” vine de la scripturile vechi din `/config/hidroelectrica/` sau pachetul YAML legacy — **nu** de la integrarea HACS v1.1.2+.
+
+### Fix rapid (integrare HACS)
+
+1. **Setări → Integrări → Hidroelectrica → Re-login forțat** (buton)  
+   sau serviciu: `hidroelectrica.force_login`
+2. Așteaptă ~2 min (Xvfb + reCAPTCHA + Chromium)
+3. Verifică `binary_sensor.*_sesiune_ok` → ON
+
+### După restart HA
+
+Integrarea v1.1.2+ face recovery automat la **90s** după pornire. Dacă eșuează, apasă Re-login forțat.
+
+### Dezactivează conflictul legacy
+
+Dacă ai încă `/config/packages/energie/hidroelectrica.yaml` cu `shell_command.hidro_*` la 30 min, **dezactivează** automatizările legacy (integrarea HACS le înlocuiește). Altfel primești notificări Telegram vechi cu `import_session.py`.
+
+### Cale sesiune (obligatoriu)
+
+Toate fișierele sesiune: **`/config/hidroelectrica/session.json`** (nu sub `<entry_id>/`).
+
+## Session keeps failing (general)
 
 1. Press **Force login** button entity
 2. Call service `*.force_login`
