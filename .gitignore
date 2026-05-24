@@ -1,0 +1,59 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+.venv/
+venv/
+env/
+*.egg-info/
+.eggs/
+dist/
+build/
+.mypy_cache/
+.ruff_cache/
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Home Assistant / runtime (never commit)
+secrets.json
+*.pem
+token.txt
+session.json
+cookies_import.json
+data.json
+health.json
+last_alert.txt
+last_invoice.txt
+browser_profile/
+invoices/
+debug/
+backups/
+logs/
+*.log
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+
+# Local / deploy
+.env
+.env.*
+*.local
+deploy_local.sh
+ha-energie-integrations-backup/
+
+# Test artifacts
+.coverage
+coverage.xml
+test_secrets/
+
+# OS
+*.bak
+*~
