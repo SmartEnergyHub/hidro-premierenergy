@@ -9,7 +9,7 @@ from homeassistant import config_entries
 from homeassistant.data_entry_flow import FlowResult
 from homeassistant.helpers import selector
 
-from .const import CONF_TELEMETRY_OPT_IN, DOMAIN, URL_DONATE
+from .const import CONF_TELEMETRY_OPT_IN, URL_DONATE
 from .lib.support import URL_DISCUSSIONS, URL_DOCS, URL_GITHUB, URL_ISSUES
 
 

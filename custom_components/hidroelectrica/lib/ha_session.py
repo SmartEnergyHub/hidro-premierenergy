@@ -47,9 +47,10 @@ def ensure_session(*, allow_auto_login: bool = True) -> bool:
 
 def setup_storage_dir(base_dir: Path) -> None:
     """Setează HIDROELECTRICA_DIR — preferă /config/hidroelectrica (legacy)."""
+    domain_dir = "hidroelectrica"
     legacy = base_dir
-    if base_dir.name != DOMAIN:
-        legacy = base_dir.parent if base_dir.parent.name == DOMAIN else base_dir
+    if base_dir.name != domain_dir:
+        legacy = base_dir.parent if base_dir.parent.name == domain_dir else base_dir
     os.environ["HIDROELECTRICA_DIR"] = str(legacy)
     legacy.mkdir(parents=True, exist_ok=True)
     (legacy / "logs").mkdir(exist_ok=True)

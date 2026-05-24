@@ -5,7 +5,7 @@ from __future__ import annotations
 import json
 import re
 import zipfile
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
@@ -77,7 +77,7 @@ def build_support_bundle(
 ) -> Path:
     out_dir = config_dir / "support_bundles"
     out_dir.mkdir(parents=True, exist_ok=True)
-    ts = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
+    ts = datetime.now(UTC).strftime("%Y%m%d_%H%M%S")
     zip_path = out_dir / f"{integration}_{entry_id[:8]}_{ts}.zip"
 
     payload = {
