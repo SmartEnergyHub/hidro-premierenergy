@@ -32,12 +32,12 @@ if [ "$HTTP" != "200" ]; then
   exit 1
 fi
 
-echo "==> Enable Discussions..."
+echo "==> Enable Discussions + HACS repo metadata..."
 curl -sS -X PATCH \
   -H "Authorization: Bearer ${GITHUB_TOKEN}" \
   -H "Accept: application/vnd.github+json" \
   "https://api.github.com/repos/${ORG}/${REPO}" \
-  -d '{"has_discussions":true}' >/dev/null
+  -d '{"has_discussions":true,"description":"Home Assistant FULL AUTO — Premier Energy (gaze naturale) + Hidroelectrica (energie electrică). HACS custom integrations for Romania.","topics":["homeassistant","hacs-integration","integration","romania","energy","utility"]}' >/dev/null
 
 echo "==> Push main + tags..."
 $GIT remote remove origin 2>/dev/null || true
