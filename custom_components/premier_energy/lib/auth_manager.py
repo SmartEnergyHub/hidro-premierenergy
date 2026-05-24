@@ -90,6 +90,12 @@ class PremierAuthManager:
     def save_token(self, token: str) -> None:
         self.token_file.write_text(token, encoding="utf-8")
 
+    def _token_margin_sec(self, token: str) -> int | None:
+        payload = self.decode_jwt_payload(token)
+        if payload and payload.get("exp"):
+            return int(payload["exp"] - time.time())
+        return None
+
     def _create_driver(self) -> webdriver.Chrome:
         self.browser_profile.mkdir(parents=True, exist_ok=True)
         opts = Options()
@@ -172,13 +178,21 @@ class PremierAuthManager:
 
     def refresh_token(self, *, force: bool = False) -> str:
         cached = self.read_token()
-        if (
-            not force
-            and cached
-            and self.token_is_valid(cached)
-            and self.validate_token_via_api(cached)
-        ):
-            return cached
+        if cached and not force:
+            margin = self._token_margin_sec(cached)
+            if (
+                margin is not None
+                and margin > TOKEN_MARGIN_SECONDS
+                and self.validate_token_via_api(cached)
+            ):
+                return cached
+            if margin is not None and margin <= TOKEN_MARGIN_SECONDS:
+                _LOGGER.info(
+                    "Token expiră în %ds — refresh proactiv (prag %ds)",
+                    margin,
+                    TOKEN_MARGIN_SECONDS,
+                )
+                force = True
 
         last_err: Exception | None = None
         for attempt in range(1, MAX_ATTEMPTS + 1):

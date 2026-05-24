@@ -3,6 +3,14 @@
 All notable changes to this project are documented here.
 Format based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [1.0.2] - 2026-05-24
+
+### Fixed
+- **Premier Energy (gaze naturale):** refresh proactiv token când expiră în <20 min
+- Refresh automat la 90s după pornirea HA (`homeassistant_started`)
+- Oglindire `token.txt` + `health.json` în `/config/premier_energy/` (compatibilitate legacy)
+- Documentat fix `shell_command.premier_health_check` — [examples/legacy/premier_shell_command.yaml](examples/legacy/premier_shell_command.yaml)
+
 ## [1.0.1] - 2026-05-24
 
 ### Added

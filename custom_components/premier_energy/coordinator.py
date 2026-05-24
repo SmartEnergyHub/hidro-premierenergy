@@ -46,6 +46,7 @@ class PremierCoordinator(DataUpdateCoordinator[dict[str, Any]]):
     async def _async_update_data(self) -> dict[str, Any]:
         try:
             token = await self.hass.async_add_executor_job(self._auth.refresh_token)
+            await self.hass.async_add_executor_job(self.storage.write_token_sync, token)
             self.auth_ok = True
             self.last_auth_method = "cache" if self._auth.token_is_valid(token) else "browser"
             data = await self.hass.async_add_executor_job(PremierApiClient(token).fetch_all)
@@ -76,7 +77,10 @@ class PremierCoordinator(DataUpdateCoordinator[dict[str, Any]]):
             raise UpdateFailed(f"Premier Energy update failed: {err}") from err
 
     async def async_force_login(self) -> None:
-        await self.hass.async_add_executor_job(lambda: self._auth.refresh_token(force=True))
+        token = await self.hass.async_add_executor_job(
+            lambda: self._auth.refresh_token(force=True)
+        )
+        await self.hass.async_add_executor_job(self.storage.write_token_sync, token)
         await self.async_request_refresh()
 
     async def async_refresh_session(self) -> None:

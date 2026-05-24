@@ -1,5 +1,20 @@
 # Troubleshooting
 
+## Premier — token expirat după restart HA
+
+**Cauză (setup legacy YAML):** `shell_command.premier_health_check` definit doar în `packages/` — HA nu înregistrează serviciul → watchdog-ul eșuează → tokenul nu se reînnoiește.
+
+**Fix:**
+
+1. Mută comenzile în **`configuration.yaml`** (vezi [examples/legacy/premier_shell_command.yaml](../examples/legacy/premier_shell_command.yaml))
+2. Elimină blocul `shell_command:` duplicat din pachetul YAML
+3. Restart HA
+
+**Cu integrarea HACS `premier_energy` (v1.0.2+):**
+
+- Refresh automat la 10 min + la 90s după pornirea HA
+- Token/health oglindite în `/config/premier_energy/token.txt` și `health.json` pentru carduri legacy
+
 ## Premier — "invalid_auth" at setup
 
 - Verify email/password at https://my.premierenergy.ro

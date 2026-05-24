@@ -1,0 +1,61 @@
+# =============================================================================
+# Premier Energy (gaze naturale) — setup LEGACY (shell_command + YAML)
+# Folosește DOAR dacă NU ai integrarea HACS premier_energy.
+# Dacă ai integrarea HACS, dezactivează aceste automatizări (vezi MIGRATION.md).
+#
+# IMPORTANT: shell_command TREBUIE în configuration.yaml (root), NU doar în packages!
+# Altfel automation.premier_energy_health_watchdog raportează „unknown action”.
+# =============================================================================
+
+# --- Adaugă în /config/configuration.yaml (secțiunea shell_command:) ---
+
+shell_command:
+  premier_health_check: >
+    /config/premier_energy/venv/bin/python3 /config/premier_energy/health_check.py
+
+  premier_refresh_token: >
+    flock -w 180 /config/.chromium_automation.lock -c
+    'export PATH=/usr/bin:/bin:/usr/sbin:/sbin;
+    export CHROMIUM_PATH=/usr/bin/chromium;
+    export CHROMEDRIVER_PATH=/usr/bin/chromedriver;
+    /config/premier_energy/venv/bin/python3 /config/premier_energy/refresh_token.py'
+
+# --- packages/energie/premier_token_refresh.yaml (FĂRĂ bloc shell_command duplicat) ---
+
+command_line:
+  - sensor:
+      name: premier_health
+      unique_id: premier_health_sensor
+      command: "cat /config/premier_energy/health.json 2>/dev/null || echo '{\"status\":\"unknown\"}'"
+      scan_interval: 300
+      value_template: "{{ value_json.status | default('unknown') }}"
+      json_attributes:
+        - status
+        - updated_at_iso
+        - token_exp
+        - token_margin_sec
+        - method
+        - service
+
+automation:
+  - id: premier_refresh_token_schedule
+    alias: Premier Energy (gaze naturale) — refresh token
+    mode: single
+    triggers:
+      - trigger: time_pattern
+        minutes: "/10"
+      - trigger: homeassistant
+        event: start
+    actions:
+      - action: shell_command.premier_refresh_token
+
+  - id: premier_health_watchdog
+    alias: Premier Energy (gaze naturale) — health watchdog
+    mode: single
+    triggers:
+      - trigger: time_pattern
+        minutes: "25"
+      - trigger: homeassistant
+        event: start
+    actions:
+      - action: shell_command.premier_health_check

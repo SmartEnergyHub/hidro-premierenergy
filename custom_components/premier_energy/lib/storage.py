@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import logging
 from pathlib import Path
 from typing import Any
 
@@ -10,6 +11,8 @@ from homeassistant.core import HomeAssistant, callback
 from homeassistant.helpers.storage import Store
 
 from ..const import DOMAIN, STORAGE_KEY_SESSION, STORAGE_VERSION
+
+_LOGGER = logging.getLogger(__name__)
 
 
 class PremierStorage:
@@ -52,6 +55,20 @@ class PremierStorage:
 
     def write_token_sync(self, token: str) -> None:
         self.token_path().write_text(token, encoding="utf-8")
+        self._mirror_legacy_file("token.txt", token)
 
     def write_health_sync(self, payload: dict[str, Any]) -> None:
-        (self.base_dir / "health.json").write_text(json.dumps(payload, indent=2), encoding="utf-8")
+        text = json.dumps(payload, indent=2)
+        (self.base_dir / "health.json").write_text(text, encoding="utf-8")
+        self._mirror_legacy_file("health.json", text)
+
+    def _mirror_legacy_file(self, name: str, content: str) -> None:
+        """Scrie și în /config/premier_energy/ pentru senzori YAML legacy (command_line)."""
+        legacy = Path(self.hass.config.config_dir) / DOMAIN / name
+        if legacy == self.base_dir / name:
+            return
+        try:
+            legacy.parent.mkdir(parents=True, exist_ok=True)
+            legacy.write_text(content, encoding="utf-8")
+        except OSError as err:
+            _LOGGER.debug("Legacy mirror %s skipped: %s", name, err)
