@@ -22,7 +22,7 @@ blueprint:
       default: notify.mobile_app
       selector:
         text:
-  source_url: https://github.com/johnny29/hidro-premierenergy
+  source_url: https://github.com/SmartEnergyHub/hidro-premierenergy
 
 trigger:
   - platform: state

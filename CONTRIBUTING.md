@@ -5,7 +5,7 @@ Thank you for contributing to HA Energie Romania integrations.
 ## Development setup
 
 ```bash
-git clone https://github.com/johnny29/hidro-premierenergy.git
+git clone https://github.com/SmartEnergyHub/hidro-premierenergy.git
 cd hidro-premierenergy
 python3 -m venv .venv
 source .venv/bin/activate

@@ -11,7 +11,7 @@
 
 **Do not** open a public GitHub issue for security vulnerabilities.
 
-1. Open a [private security advisory](https://github.com/johnny29/hidro-premierenergy/security/advisories/new) on GitHub, or
+1. Open a [private security advisory](https://github.com/SmartEnergyHub/hidro-premierenergy/security/advisories/new) on GitHub, or
 2. Contact maintainers via GitHub (see `CODEOWNERS`).
 
 Include: affected integration, steps to reproduce, impact assessment.

@@ -1,4 +1,4 @@
-# Publish checklist — johnny29/hidro-premierenergy
+# Publish checklist — SmartEnergyHub/hidro-premierenergy
 
 ## Security (pre-push) — mandatory
 

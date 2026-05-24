@@ -8,8 +8,8 @@
 - [Migrare legacy](docs/MIGRATION.md)
 
 ### Comunitate
-- [GitHub Discussions](https://github.com/johnny29/hidro-premierenergy/discussions)
-- [Issues — raportează problemă](https://github.com/johnny29/hidro-premierenergy/issues/new/choose)
+- [GitHub Discussions](https://github.com/SmartEnergyHub/hidro-premierenergy/discussions)
+- [Issues — raportează problemă](https://github.com/SmartEnergyHub/hidro-premierenergy/issues/new/choose)
 
 ### Support Development
 Contribuții voluntare (fără obligație):

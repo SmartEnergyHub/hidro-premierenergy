@@ -33,4 +33,4 @@ git push -u origin main
 git push origin v1.0.0
 ```
 
-Repository: `https://github.com/johnny29/hidro-premierenergy`
+Repository: `https://github.com/SmartEnergyHub/hidro-premierenergy`

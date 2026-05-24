@@ -3,6 +3,12 @@
 All notable changes to this project are documented here.
 Format based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [1.1.1] - 2026-05-24
+
+### Changed
+- Repository transferred to **[SmartEnergyHub](https://github.com/SmartEnergyHub/hidro-premierenergy)** organization
+- Updated all URLs, badges, manifests, HACS, issue templates, and support links
+
 ## [1.1.0] - 2026-05-24
 
 ### Security
@@ -79,4 +85,8 @@ Format based on [Keep a Changelog](https://keepachangelog.com/).
 ### Migration
 - Legacy shell_command setup can run in parallel — see [docs/MIGRATION.md](docs/MIGRATION.md)
 
-[1.0.0]: https://github.com/johnny29/hidro-premierenergy/releases/tag/v1.0.0
+[1.1.1]: https://github.com/SmartEnergyHub/hidro-premierenergy/releases/tag/v1.1.1
+[1.1.0]: https://github.com/SmartEnergyHub/hidro-premierenergy/releases/tag/v1.1.0
+[1.0.2]: https://github.com/SmartEnergyHub/hidro-premierenergy/releases/tag/v1.0.2
+[1.0.1]: https://github.com/SmartEnergyHub/hidro-premierenergy/releases/tag/v1.0.1
+[1.0.0]: https://github.com/SmartEnergyHub/hidro-premierenergy/releases/tag/v1.0.0

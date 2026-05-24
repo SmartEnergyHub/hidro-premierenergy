@@ -11,11 +11,11 @@ from typing import Any
 
 # URL-uri publice — fără PayPal/email direct în cod
 URL_DONATE = "https://hidro-premierenergy.ro/donate"
-URL_GITHUB = "https://github.com/johnny29/hidro-premierenergy"
-URL_ISSUES = "https://github.com/johnny29/hidro-premierenergy/issues/new/choose"
-URL_DISCUSSIONS = "https://github.com/johnny29/hidro-premierenergy/discussions"
-URL_DOCS = "https://github.com/johnny29/hidro-premierenergy/blob/main/docs/INSTALLATION.md"
-URL_SUPPORT = "https://github.com/johnny29/hidro-premierenergy/blob/main/SUPPORT.md"
+URL_GITHUB = "https://github.com/SmartEnergyHub/hidro-premierenergy"
+URL_ISSUES = "https://github.com/SmartEnergyHub/hidro-premierenergy/issues/new/choose"
+URL_DISCUSSIONS = "https://github.com/SmartEnergyHub/hidro-premierenergy/discussions"
+URL_DOCS = "https://github.com/SmartEnergyHub/hidro-premierenergy/blob/main/docs/INSTALLATION.md"
+URL_SUPPORT = "https://github.com/SmartEnergyHub/hidro-premierenergy/blob/main/SUPPORT.md"
 
 SUPPORT_LINKS: dict[str, str] = {
     "donate": URL_DONATE,
@@ -24,10 +24,10 @@ SUPPORT_LINKS: dict[str, str] = {
     "discussions": URL_DISCUSSIONS,
     "docs": URL_DOCS,
     "support": URL_SUPPORT,
-    "feature_request": "https://github.com/johnny29/hidro-premierenergy/issues/new?template=feature_request.yml",
-    "bug_report": "https://github.com/johnny29/hidro-premierenergy/issues/new?template=bug_report.yml",
-    "auth_issue": "https://github.com/johnny29/hidro-premierenergy/issues/new?template=auth_issue.yml",
-    "provider_change": "https://github.com/johnny29/hidro-premierenergy/issues/new?template=provider_change.yml",
+    "feature_request": "https://github.com/SmartEnergyHub/hidro-premierenergy/issues/new?template=feature_request.yml",
+    "bug_report": "https://github.com/SmartEnergyHub/hidro-premierenergy/issues/new?template=bug_report.yml",
+    "auth_issue": "https://github.com/SmartEnergyHub/hidro-premierenergy/issues/new?template=auth_issue.yml",
+    "provider_change": "https://github.com/SmartEnergyHub/hidro-premierenergy/issues/new?template=provider_change.yml",
 }
 
 _REDACT_PATTERNS = (

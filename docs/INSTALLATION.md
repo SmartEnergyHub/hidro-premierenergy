@@ -121,7 +121,7 @@ Premier și Hidro **partajează** același lock (`/config/.chromium_automation.l
 1. Instalează [HACS](https://hacs.xyz/docs/setup/download) dacă nu îl ai
 2. **HACS** → **Integrations** → **⋮** (meniu) → **Custom repositories**
 3. Adaugă:
-   - **Repository:** `https://github.com/johnny29/hidro-premierenergy`
+   - **Repository:** `https://github.com/SmartEnergyHub/hidro-premierenergy`
    - **Category:** Integration
 4. **Download** repository
 5. **Restart Home Assistant** (Setări → Sistem → Restart)
@@ -131,7 +131,7 @@ Premier și Hidro **partajează** același lock (`/config/.chromium_automation.l
 
 ```bash
 cd /config
-git clone --depth 1 https://github.com/johnny29/hidro-premierenergy.git /tmp/ha-energie
+git clone --depth 1 https://github.com/SmartEnergyHub/hidro-premierenergy.git /tmp/ha-energie
 cp -r /tmp/ha-energie/custom_components/premier_energy custom_components/
 cp -r /tmp/ha-energie/custom_components/hidroelectrica custom_components/
 rm -rf /tmp/ha-energie
