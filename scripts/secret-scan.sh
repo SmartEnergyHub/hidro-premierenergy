@@ -41,12 +41,12 @@ for pat in "${PATTERNS[@]}"; do
 done
 
 echo "==> Checking for hardcoded password values in examples..."
-# Allowed placeholders only — reject anything that looks like a real password assignment
+# Only scan docs/examples — translation labels use key "password" with UI text, not secrets
 PLACEHOLDER_RE='your_password_here|example_password|dummy_value|test_token_example|<PASSWORD>|\*\*\*|\$\{'
 if grep -rE --include='*.json' --include='*.yaml' --include='*.yml' \
-  "\"password\"[[:space:]]*:[[:space:]]*\"[^\"]+\"" custom_components docs examples 2>/dev/null \
+  "\"password\"[[:space:]]*:[[:space:]]*\"[^\"]+\"" docs examples 2>/dev/null \
   | grep -vEi "$PLACEHOLDER_RE"; then
-  echo "FAIL: hardcoded password value (use placeholders only)"
+  echo "FAIL: hardcoded password value in docs/examples (use placeholders only)"
   FAIL=1
 fi
 
