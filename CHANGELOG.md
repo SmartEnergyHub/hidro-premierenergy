@@ -5,6 +5,11 @@ Format based on [Keep a Changelog](https://keepachangelog.com/).
 
 ## [1.1.0] - 2026-05-24
 
+### Security
+- Removed development password literals from repository and **rewrote git history**
+- Added gitleaks + `verify-repo-clean.sh` (full history scan in CI)
+- Policy: placeholders only in docs/examples (`your_password_here`, etc.)
+
 ### Added
 - **Support Development** — butoane, servicii, Options Flow, donate via [hidro-premierenergy.ro/donate](https://hidro-premierenergy.ro/donate)
 - Export **Support Bundle** ZIP redactat (fără parole/tokenuri/cookies)
