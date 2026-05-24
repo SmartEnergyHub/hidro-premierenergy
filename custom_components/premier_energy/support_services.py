@@ -49,7 +49,9 @@ def register_support_services(hass: HomeAssistant) -> None:
         for coord in _coords(hass, call.data.get("entry_id")):
             await coord.async_notify_support_link(template)
 
-    hass.services.async_register(DOMAIN, SERVICE_OPEN_SUPPORT_LINK, open_support_link, schema=schema_link)
+    hass.services.async_register(
+        DOMAIN, SERVICE_OPEN_SUPPORT_LINK, open_support_link, schema=schema_link
+    )
     hass.services.async_register(
         DOMAIN,
         SERVICE_EXPORT_SUPPORT_BUNDLE,

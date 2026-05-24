@@ -60,8 +60,7 @@ def redact_dict(data: Any) -> Any:
             "username",
         }
         return {
-            k: "[REDACTED]" if k.lower() in skip_keys else redact_dict(v)
-            for k, v in data.items()
+            k: "[REDACTED]" if k.lower() in skip_keys else redact_dict(v) for k, v in data.items()
         }
     if isinstance(data, list):
         return [redact_dict(x) for x in data]
@@ -95,9 +94,16 @@ def build_support_bundle(
         if log_grep:
             zf.writestr("logs_excerpt.txt", redact_text(log_grep[:50000]))
         health = config_dir / integration.replace("_", "") / "health.json"
-        legacy_health = config_dir / ("premier_energy" if "premier" in integration else "hidroelectrica") / "health.json"
+        legacy_health = (
+            config_dir
+            / ("premier_energy" if "premier" in integration else "hidroelectrica")
+            / "health.json"
+        )
         for hp in (legacy_health, health):
             if hp.is_file():
-                zf.writestr(f"health_{hp.parent.name}.json", redact_text(hp.read_text(encoding="utf-8")[:20000]))
+                zf.writestr(
+                    f"health_{hp.parent.name}.json",
+                    redact_text(hp.read_text(encoding="utf-8")[:20000]),
+                )
                 break
     return zip_path

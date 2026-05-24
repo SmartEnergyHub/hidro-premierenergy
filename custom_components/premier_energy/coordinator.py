@@ -78,9 +78,7 @@ class PremierCoordinator(DataUpdateCoordinator[dict[str, Any]]):
             raise UpdateFailed(f"Premier Energy update failed: {err}") from err
 
     async def async_force_login(self) -> None:
-        token = await self.hass.async_add_executor_job(
-            lambda: self._auth.refresh_token(force=True)
-        )
+        token = await self.hass.async_add_executor_job(lambda: self._auth.refresh_token(force=True))
         await self.hass.async_add_executor_job(self.storage.write_token_sync, token)
         await self.async_request_refresh()
 

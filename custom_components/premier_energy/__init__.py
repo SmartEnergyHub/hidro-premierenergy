@@ -34,15 +34,14 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     @callback
     def _on_ha_start(event) -> None:
         """Refresh token la pornirea HA (evită token expirat după restart)."""
+
         async def _delayed_refresh(_now):
             if hass.state == CoreState.running:
                 await coordinator.async_refresh_session()
 
         async_call_later(hass, 90, _delayed_refresh)
 
-    entry.async_on_unload(
-        hass.bus.async_listen_once("homeassistant_started", _on_ha_start)
-    )
+    entry.async_on_unload(hass.bus.async_listen_once("homeassistant_started", _on_ha_start))
 
     await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
     _register_services(hass)
