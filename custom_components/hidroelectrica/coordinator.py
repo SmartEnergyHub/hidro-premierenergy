@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import logging
 import time
+from pathlib import Path
 from typing import Any
 
 from homeassistant.config_entries import ConfigEntry
@@ -90,8 +91,51 @@ class HidroCoordinator(DataUpdateCoordinator[dict[str, Any]]):
         return await self.hass.async_add_executor_job(lambda: download_invoice_pdf(invoice_number))
 
     def export_debug(self) -> dict[str, Any]:
+        from .lib.config import HEALTH_FILE, SESSION_FILE
+        from .lib.session import load_session
+
+        session = load_session() or {}
         return {
             "entry_id": self.entry.entry_id,
             "session_ok": self.session_ok,
             "storage_dir": str(self.storage.base_dir),
+            "session_file": str(SESSION_FILE),
+            "session_cookies_count": len(session.get("cookies", [])),
+            "session_has_csrf": bool(session.get("csrf")),
+            "health_file": str(HEALTH_FILE),
+            "last_update": (self.data or {}).get("updated_at"),
+            "coordinator_last_success": self.last_update_success,
         }
+
+    async def async_export_support_bundle(self) -> str:
+        from .lib.support import build_support_bundle
+
+        log_excerpt = ""
+        log_path = self.storage.base_dir / "logs" / "hidro.session.log"
+        if log_path.is_file():
+            log_excerpt = log_path.read_text(encoding="utf-8", errors="replace")[-30000:]
+
+        path = await self.hass.async_add_executor_job(
+            build_support_bundle,
+            Path(self.hass.config.config_dir),
+            DOMAIN,
+            self.entry.entry_id,
+            self.export_debug(),
+            log_excerpt,
+        )
+        return str(path)
+
+    async def async_notify_support_link(self, link_key: str) -> str:
+        from .lib.support import SUPPORT_LINKS
+
+        url = SUPPORT_LINKS.get(link_key, SUPPORT_LINKS["support"])
+        await self.hass.services.async_call(
+            "persistent_notification",
+            "create",
+            {
+                "title": "Hidroelectrica — Support",
+                "message": f"[Deschide link-ul]({url})",
+                "notification_id": f"{DOMAIN}_support_{link_key}",
+            },
+        )
+        return url

@@ -1,0 +1,33 @@
+name: Auth / Login Issue
+description: Probleme token JWT (Premier) sau cookies/sesiune (Hidro)
+title: "[Auth]: "
+labels: ["auth", "triage"]
+body:
+  - type: dropdown
+    id: integration
+    attributes:
+      label: Integrare
+      options:
+        - Premier Energy (gaze naturale)
+        - Hidroelectrica (energie electrică)
+    validations:
+      required: true
+  - type: textarea
+    id: symptoms
+    attributes:
+      label: Simptome
+      description: Token expirat, sesiune invalidă, reCAPTCHA, etc.
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Log relevant (fără parole!)
+  - type: checkboxes
+    id: tried
+    attributes:
+      label: Am încercat
+      options:
+        - label: Re-login forțat (buton)
+        - label: Restart Home Assistant
+        - label: Export support bundle

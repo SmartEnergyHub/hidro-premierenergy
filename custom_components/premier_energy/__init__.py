@@ -6,7 +6,7 @@ import logging
 
 import voluptuous as vol
 from homeassistant.config_entries import ConfigEntry
-from homeassistant.core import HomeAssistant, CoreState, ServiceCall, callback
+from homeassistant.core import CoreState, HomeAssistant, ServiceCall, callback
 from homeassistant.helpers import config_validation as cv
 from homeassistant.helpers.event import async_call_later
 
@@ -20,6 +20,7 @@ from .const import (
     SERVICE_SEND_INDEX,
 )
 from .coordinator import PremierCoordinator
+from .support_services import register_support_services
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -45,6 +46,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
 
     await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
     _register_services(hass)
+    register_support_services(hass)
     return True
 
 

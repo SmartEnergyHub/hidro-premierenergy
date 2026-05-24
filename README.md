@@ -3,6 +3,7 @@
 [![hacs_badge](https://img.shields.io/badge/HACS-Custom-orange.svg)](https://github.com/hacs/integration)
 [![GitHub release](https://img.shields.io/github/v/release/johnny29/hidro-premierenergy)](https://github.com/johnny29/hidro-premierenergy/releases)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![Support](https://img.shields.io/badge/Support-Development-ff69b4?style=flat&logo=data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgZmlsbD0iI2ZmNjBjMCIgdmlld0JveD0iMCAwIDE2IDE2Ij48cGF0aCBkPS04IDMuMi4yLjUgMS44IDEuNCAxLjggMy44bDQuNSA0LjUgNC41LTQuNUEyIDIgMCAwIDAgMTQuNSA0LjVhMiAyIDAgMCAwLTMuMS0yTDEwIDUuN2ExIDEgMCAwIDAtMS40IDB6Ii8+PC9zdmc+)](https://hidro-premierenergy.ro/donate)
 
 Integrări custom Home Assistant pentru portalurile românești de utilități — **FULL AUTO**, gata de producție.
 
@@ -132,6 +133,18 @@ cp -r /tmp/ha-energie/custom_components/hidroelectrica custom_components/
 - Senzor perioadă autocitire
 - Keepalive sesiune la 5 min
 - Xvfb + Chromium headed (reCAPTCHA)
+
+---
+
+## Support Development
+
+Contribuții **voluntare** — fără obligație, fără funcții blocate:
+
+**[Support Development](https://hidro-premierenergy.ro/donate)**
+
+În Home Assistant: buton **Support Development** pe dispozitivul integrării.
+
+Feedback: [GitHub Issues](https://github.com/johnny29/hidro-premierenergy/issues/new/choose) · [Discussions](https://github.com/johnny29/hidro-premierenergy/discussions)
 
 ---
 

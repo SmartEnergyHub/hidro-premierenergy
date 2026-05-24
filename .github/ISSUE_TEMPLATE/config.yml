@@ -1,8 +1,11 @@
 blank_issues_enabled: false
 contact_links:
-  - name: Documentation
-    url: https://github.com/johnny29/hidro-premierenergy#readme
-    about: Installation, troubleshooting, architecture
-  - name: Security advisory
-    url: https://github.com/johnny29/hidro-premierenergy/security/advisories/new
-    about: Report a vulnerability privately
+  - name: Support Development
+    url: https://hidro-premierenergy.ro/donate
+    about: Contribuții voluntare pentru dezvoltare
+  - name: GitHub Discussions
+    url: https://github.com/johnny29/hidro-premierenergy/discussions
+    about: Întrebări și feedback comunitate
+  - name: Support Guide
+    url: https://github.com/johnny29/hidro-premierenergy/blob/main/SUPPORT.md
+    about: Documentație support și debug export

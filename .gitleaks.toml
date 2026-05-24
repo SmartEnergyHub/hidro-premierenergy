@@ -1,0 +1,22 @@
+title = "hidro-premierenergy gitleaks config"
+
+[extend]
+useDefault = true
+
+# Public reCAPTCHA site keys (embedded in provider web pages) — not secrets
+[[rules.allowlists]]
+description = "Public reCAPTCHA site key on ihidro.ro"
+regexTarget = "match"
+regexes = ['''6LdWVgYfAAAAAOtv1JCMvOVYagKN_I7Tt8EMCBWx''']
+
+[[rules.allowlists]]
+description = "Documentation placeholders"
+regexTarget = "match"
+regexes = [
+  '''your_password_here''',
+  '''example_password''',
+  '''dummy_value''',
+  '''test_token_example''',
+  '''ghp_xxx''',
+  '''YOUR_GITHUB_TOKEN''',
+]

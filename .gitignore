@@ -47,6 +47,7 @@ Thumbs.db
 .env.*
 *.local
 deploy_local.sh
+ha-energie-integrations/
 ha-energie-integrations-backup/
 
 # Test artifacts

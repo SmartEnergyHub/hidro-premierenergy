@@ -1,46 +1,37 @@
 name: Bug Report
-description: Something is broken in Premier Energy or Hidroelectrica
+description: Raportează un bug în integrarea Premier Energy sau Hidroelectrica
 title: "[Bug]: "
 labels: ["bug", "triage"]
 body:
-  - type: markdown
-    attributes:
-      value: |
-        Do not paste passwords, tokens, or unredacted diagnostics.
   - type: dropdown
     id: integration
     attributes:
-      label: Integration
+      label: Integrare
       options:
-        - premier_energy
-        - hidroelectrica
+        - Premier Energy (gaze naturale)
+        - Hidroelectrica (energie electrică)
+        - Ambele
     validations:
       required: true
-  - type: input
-    id: version
+  - type: textarea
+    id: description
     attributes:
-      label: Integration version
-      placeholder: "1.0.0"
-    validations:
-      required: true
-  - type: dropdown
-    id: install_type
-    attributes:
-      label: Installation type
-      options:
-        - Home Assistant OS
-        - Supervised
-        - Container
-        - Core (venv)
+      label: Descriere
+      description: Ce nu funcționează?
     validations:
       required: true
   - type: textarea
     id: steps
     attributes:
-      label: Steps to reproduce
-    validations:
-      required: true
-  - type: textarea
-    id: logs
+      label: Pași de reproducere
+  - type: input-text
+    id: ha_version
     attributes:
-      label: Relevant logs (redacted)
+      label: Versiune Home Assistant
+  - type: checkboxes
+    id: debug
+    attributes:
+      label: Debug
+      options:
+        - label: Am atașat diagnostics / support bundle redactat
+          required: false

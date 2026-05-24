@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import logging
 import os
+from pathlib import Path
 from typing import Any
 
 import voluptuous as vol
@@ -50,16 +51,16 @@ class HidroelectricaConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             self._abort_if_unique_id_configured()
 
             try:
-                base = self.hass.config.path(DOMAIN, "validate")
-                setup_storage_dir(base)
+                base = self.hass.config.path(DOMAIN)
+                setup_storage_dir(Path(base))
                 write_secrets_sync(
-                    base,
+                    Path(base),
                     username=user_input[CONF_USERNAME],
                     password=user_input[CONF_PASSWORD],
                     telegram_bot_token=user_input.get(CONF_TELEGRAM_BOT_TOKEN, ""),
                     telegram_chat_id=user_input.get(CONF_TELEGRAM_CHAT_ID, ""),
                 )
-                os.environ["HIDROELECTRICA_DIR"] = str(base)
+                os.environ["HIDROELECTRICA_DIR"] = str(Path(base))
                 ok = await self.hass.async_add_executor_job(ensure_session)
                 if not ok:
                     raise RuntimeError("Login failed")
@@ -73,3 +74,10 @@ class HidroelectricaConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 )
 
         return self.async_show_form(step_id="user", data_schema=STEP_USER_SCHEMA, errors=errors)
+
+    @staticmethod
+    @config_entries.callback
+    def async_get_options_flow(config_entry: config_entries.ConfigEntry):
+        from .options_flow import HidroOptionsFlowHandler
+
+        return HidroOptionsFlowHandler(config_entry)

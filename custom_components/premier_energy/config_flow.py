@@ -75,16 +75,6 @@ class PremierEnergyConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
     def async_get_options_flow(
         config_entry: config_entries.ConfigEntry,
     ) -> config_entries.OptionsFlow:
+        from .options_flow import PremierOptionsFlowHandler
+
         return PremierOptionsFlowHandler(config_entry)
-
-
-class PremierOptionsFlowHandler(config_entries.OptionsFlow):
-    """Options — scan interval override (future)."""
-
-    def __init__(self, config_entry: config_entries.ConfigEntry) -> None:
-        self.config_entry = config_entry
-
-    async def async_step_init(
-        self, user_input: dict[str, Any] | None = None
-    ) -> config_entries.FlowResult:
-        return self.async_create_entry(title="", data=self.config_entry.options)

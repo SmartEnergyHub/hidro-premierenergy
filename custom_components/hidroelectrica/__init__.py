@@ -19,6 +19,7 @@ from .const import (
     SERVICE_SEND_INDEX,
 )
 from .coordinator import HidroCoordinator
+from .support_services import register_support_services
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -29,6 +30,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     hass.data.setdefault(DOMAIN, {})[entry.entry_id] = coordinator
     await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
     _register_services(hass)
+    register_support_services(hass)
     return True
 
 

@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import logging
 import time
+from pathlib import Path
 from typing import Any
 
 from homeassistant.config_entries import ConfigEntry
@@ -103,10 +104,47 @@ class PremierCoordinator(DataUpdateCoordinator[dict[str, Any]]):
         )
 
     def export_debug(self) -> dict[str, Any]:
+        token = self._auth.read_token()
+        margin = self._token_margin(token) if token else None
         return {
             "entry_id": self.entry.entry_id,
             "auth_ok": self.auth_ok,
             "last_auth_method": self.last_auth_method,
             "storage_dir": str(self.storage.base_dir),
             "health_file": str(self.storage.base_dir / "health.json"),
+            "token_margin_sec": margin,
+            "coordinator_last_success": self.last_update_success,
         }
+
+    async def async_export_support_bundle(self) -> str:
+        from .lib.support import build_support_bundle
+
+        log_path = Path(self.hass.config.config_dir) / "home-assistant.log"
+        log_excerpt = ""
+        if log_path.is_file():
+            log_excerpt = log_path.read_text(encoding="utf-8", errors="replace")[-30000:]
+
+        path = await self.hass.async_add_executor_job(
+            build_support_bundle,
+            Path(self.hass.config.config_dir),
+            DOMAIN,
+            self.entry.entry_id,
+            self.export_debug(),
+            log_excerpt,
+        )
+        return str(path)
+
+    async def async_notify_support_link(self, link_key: str) -> str:
+        from .lib.support import SUPPORT_LINKS
+
+        url = SUPPORT_LINKS.get(link_key, SUPPORT_LINKS["support"])
+        await self.hass.services.async_call(
+            "persistent_notification",
+            "create",
+            {
+                "title": "Premier Energy — Support",
+                "message": f"[Deschide link-ul]({url})",
+                "notification_id": f"{DOMAIN}_support_{link_key}",
+            },
+        )
+        return url

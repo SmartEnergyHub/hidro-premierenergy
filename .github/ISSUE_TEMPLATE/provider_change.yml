@@ -1,0 +1,18 @@
+name: Provider Portal Changed
+description: Portalul Premier Energy sau iHidro s-a schimbat
+title: "[Provider]: "
+labels: ["provider-change"]
+body:
+  - type: dropdown
+    id: provider
+    attributes:
+      label: Furnizor
+      options:
+        - Premier Energy (my.premierenergy.ro)
+        - Hidroelectrica (ihidro.ro)
+  - type: textarea
+    id: change
+    attributes:
+      label: Ce s-a schimbat?
+    validations:
+      required: true

@@ -32,7 +32,11 @@
     },
     "button": {
       "refresh_session": { "name": "Reîmprospătează sesiunea" },
-      "force_login": { "name": "Re-login forțat" }
+      "force_login": { "name": "Re-login forțat" },
+      "support_development": { "name": "Support Development" },
+      "export_support_bundle": { "name": "Export Support Bundle" },
+      "open_github": { "name": "Deschide GitHub" },
+      "report_issue": { "name": "Raportează problemă" }
     }
   }
 }

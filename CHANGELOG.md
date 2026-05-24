@@ -3,6 +3,19 @@
 All notable changes to this project are documented here.
 Format based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [1.1.0] - 2026-05-24
+
+### Added
+- **Support Development** — butoane, servicii, Options Flow, donate via [hidro-premierenergy.ro/donate](https://hidro-premierenergy.ro/donate)
+- Export **Support Bundle** ZIP redactat (fără parole/tokenuri/cookies)
+- Servicii: `open_support_link`, `export_support_bundle`, `report_issue`
+- GitHub: FUNDING.yml, SUPPORT.md, issue templates, Discussions links
+- Telemetrie anonimă **opt-in** (Options Flow)
+
+### Fixed
+- **Hidroelectrica cookies:** director sesiune unificat `/config/hidroelectrica/`, detectare login page, auto-login prioritar
+- Health/token oglindite pentru compatibilitate legacy
+
 ## [1.0.2] - 2026-05-24
 
 ### Fixed

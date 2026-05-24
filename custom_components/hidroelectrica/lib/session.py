@@ -11,15 +11,25 @@ import requests
 
 from .backup import backup_files, log_change
 from .config import (
-    COOKIES_IMPORT_FILE,
     PORTAL_BASE,
-    SESSION_FILE,
     SESSION_MARGIN_HOURS,
-    TOKEN_FILE,
+    resolve_base_dir,
 )
 from .logging_util import setup_logger
 
 log = setup_logger("hidro.session")
+
+
+def _session_file() -> Path:
+    return resolve_base_dir() / "session.json"
+
+
+def _token_file() -> Path:
+    return resolve_base_dir() / "token.txt"
+
+
+def _cookies_import_file() -> Path:
+    return resolve_base_dir() / "cookies_import.json"
 
 
 def load_secrets() -> dict[str, str]:
@@ -38,10 +48,11 @@ def load_secrets() -> dict[str, str]:
 
 
 def load_session() -> dict[str, Any] | None:
-    if not SESSION_FILE.is_file():
+    path = _session_file()
+    if not path.is_file():
         return None
     try:
-        return json.loads(SESSION_FILE.read_text(encoding="utf-8"))
+        return json.loads(path.read_text(encoding="utf-8"))
     except Exception as exc:
         log.error("session.json invalid: %s", exc)
         return None
@@ -52,8 +63,9 @@ def save_session(
     csrf: str = "",
     extra: dict[str, Any] | None = None,
 ) -> None:
-    if SESSION_FILE.is_file():
-        backup_files([SESSION_FILE], label="pre_session_save")
+    path = _session_file()
+    if path.is_file():
+        backup_files([path], label="pre_session_save")
     payload: dict[str, Any] = {
         "saved_at": time.time(),
         "cookies": cookies,
@@ -61,9 +73,9 @@ def save_session(
     }
     if extra:
         payload.update(extra)
-    SESSION_FILE.write_text(json.dumps(payload, indent=2), encoding="utf-8")
+    path.write_text(json.dumps(payload, indent=2), encoding="utf-8")
     if csrf:
-        TOKEN_FILE.write_text(csrf, encoding="utf-8")
+        _token_file().write_text(csrf, encoding="utf-8")
     log_change("SESSION saved")
     log.info("Session saved (%d cookies)", len(cookies))
 
@@ -114,6 +126,9 @@ def is_login_page(html: str, url: str) -> bool:
     if url.rstrip("/").endswith("/portal") or url.rstrip("/").endswith("/portal/"):
         if "autentificare" in low or "sign in" in low:
             return True
+    # Pagina de login ASP.NET returnează ~43KB; billing autentificat >100KB
+    if len(html or "") < 80000 and "btnlogin" in low:
+        return True
     return False
 
 
@@ -175,10 +190,10 @@ def touch_session(http: requests.Session, html: str) -> bool:
 
 
 def cookies_import_is_fresher() -> bool:
-    """True dacă cookies_import.json e mai nou decât session.json salvată."""
-    if not COOKIES_IMPORT_FILE.is_file():
+    imp = _cookies_import_file()
+    if not imp.is_file():
         return False
-    imp_mtime = COOKIES_IMPORT_FILE.stat().st_mtime
+    imp_mtime = imp.stat().st_mtime
     store = load_session()
     if not store:
         return True
@@ -192,8 +207,8 @@ def _session_from_cookies(cookies: list[dict[str, Any]], csrf: str = "") -> requ
 
 
 def try_recover_session(http: requests.Session | None = None) -> bool:
-    """Reimportă cookies_import.json doar dacă e mai nou decât session.json."""
-    if not COOKIES_IMPORT_FILE.is_file():
+    imp = _cookies_import_file()
+    if not imp.is_file():
         return False
     if not cookies_import_is_fresher():
         log.info(
@@ -202,7 +217,7 @@ def try_recover_session(http: requests.Session | None = None) -> bool:
         )
         return False
     try:
-        import_cookies_from_json(COOKIES_IMPORT_FILE)
+        import_cookies_from_json(imp)
         log.info("Sesiune recuperată din cookies_import.json")
         return True
     except Exception as exc:
@@ -219,6 +234,7 @@ def validate_session(sess: requests.Session | None = None, *, touch: bool = True
         if r.status_code != 200:
             return False
         if is_login_page(r.text, r.url):
+            log.info("Session invalid — login page detected (len=%s)", len(r.text))
             return False
         csrf = extract_csrf_from_html(r.text)
         if csrf or is_authenticated_page(r.text):
