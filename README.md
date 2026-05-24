@@ -4,7 +4,7 @@
 [![GitHub release](https://img.shields.io/github/v/release/SmartEnergyHub/hidro-premierenergy)](https://github.com/SmartEnergyHub/hidro-premierenergy/releases)
 [![Organization](https://img.shields.io/badge/org-SmartEnergyHub-blue)](https://github.com/SmartEnergyHub)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
-[![Support](https://img.shields.io/badge/Support-Development-ff69b4?style=flat&logo=data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgZmlsbD0iI2ZmNjBjMCIgdmlld0JveD0iMCAwIDE2IDE2Ij48cGF0aCBkPS04IDMuMi4yLjUgMS44IDEuNCAxLjggMy44bDQuNSA0LjUgNC41LTQuNUEyIDIgMCAwIDAgMTQuNSA0LjVhMiAyIDAgMCAwLTMuMS0yTDEwIDUuN2ExIDEgMCAwIDAtMS40IDB6Ii8+PC9zdmc+)](https://hidro-premierenergy.ro/donate)
+[![Support](https://img.shields.io/badge/Support-Development-ff69b4?style=flat&logo=data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgZmlsbD0iI2ZmNjBjMCIgdmlld0JveD0iMCAwIDE2IDE2Ij48cGF0aCBkPS04IDMuMi4yLjUgMS44IDEuNCAxLjggMy44bDQuNSA0LjUgNC41LTQuNUEyIDIgMCAwIDAgMTQuNSA0LjVhMiAyIDAgMCAwLTMuMS0yTDEwIDUuN2ExIDEgMCAwIDAtMS40IDB6Ii8+PC9zdmc+)](https://paypal.me/solovip)
 
 Integrări custom Home Assistant pentru portalurile românești de utilități — **FULL AUTO**, gata de producție.
 
@@ -141,7 +141,7 @@ cp -r /tmp/ha-energie/custom_components/hidroelectrica custom_components/
 
 Contribuții **voluntare** — fără obligație, fără funcții blocate:
 
-**[Support Development](https://hidro-premierenergy.ro/donate)**
+**[Support Development](https://paypal.me/solovip)**
 
 În Home Assistant: buton **Support Development** pe dispozitivul integrării.
 

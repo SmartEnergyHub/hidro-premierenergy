@@ -26,4 +26,4 @@ These are required for HACS default listing; CI ignores them for custom-repo ins
 
 ## Donate
 
-FUNDING.yml points to `https://hidro-premierenergy.ro/donate` (PayPal redirect configured on server, not in git).
+FUNDING.yml points to `https://paypal.me/solovip`.

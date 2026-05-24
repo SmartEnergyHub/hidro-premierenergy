@@ -1,25 +1,13 @@
-# Pagină Donate — deploy pe server (NU comite redirect PayPal în git)
+# Donate link
 
-## URL public (folosit în repo, README, HACS, HA)
-`https://hidro-premierenergy.ro/donate`
+Support Development uses **PayPal.Me**:
 
-Repository-ul conține **doar** acest URL. Destinația finală de plată se configurează **exclusiv pe server**.
+**https://paypal.me/solovip**
 
-## Deploy pe server web
+Configured in:
 
-1. Creează un landing page elegant la `/donate/index.html`
-2. Configurează redirect server-side (nginx `return 302` către destinația PayPal) **în config nginx**, nu în git
-3. Exemplu nginx:
+- `custom_components/*/const.py` → `URL_DONATE`
+- `.github/FUNDING.yml`
+- README, SUPPORT.md, issue templates
 
-```nginx
-location = /donate {
-    return 302 https://DESTINATIA_TA_CONFIGURATA_PE_SERVER;
-}
-```
-
-Sau PHP cu variabilă de mediu `DONATE_REDIRECT_URL` din `.env` server (gitignored).
-
-4. Verifică: `curl -I https://hidro-premierenergy.ro/donate`
-
-## Home Assistant / GitHub
-Toate link-urile „Support Development” folosesc: **https://hidro-premierenergy.ro/donate**
+No separate landing page required.

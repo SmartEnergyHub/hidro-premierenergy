@@ -14,7 +14,7 @@
 ### Support Development
 Contribuții voluntare (fără obligație):
 
-**[Support Development](https://hidro-premierenergy.ro/donate)**
+**[Support Development](https://paypal.me/solovip)**
 
 ### Export debug din Home Assistant
 1. Integrări → Premier Energy / Hidroelectrica → **Download diagnostics**

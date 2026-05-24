@@ -9,7 +9,7 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
-URL_DONATE = "https://hidro-premierenergy.ro/donate"
+URL_DONATE = "https://paypal.me/solovip"
 URL_GITHUB = "https://github.com/SmartEnergyHub/hidro-premierenergy"
 URL_ISSUES = "https://github.com/SmartEnergyHub/hidro-premierenergy/issues/new/choose"
 URL_DISCUSSIONS = "https://github.com/SmartEnergyHub/hidro-premierenergy/discussions"

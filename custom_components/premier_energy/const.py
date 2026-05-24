@@ -36,6 +36,6 @@ SERVICE_EXPORT_SUPPORT_BUNDLE: Final = "export_support_bundle"
 SERVICE_OPEN_SUPPORT_LINK: Final = "open_support_link"
 SERVICE_REPORT_ISSUE: Final = "report_issue"
 
-URL_DONATE: Final = "https://hidro-premierenergy.ro/donate"
+URL_DONATE: Final = "https://paypal.me/solovip"
 
 REPAIR_AUTH_FAILED: Final = "auth_failed"

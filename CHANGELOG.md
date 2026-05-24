@@ -17,7 +17,7 @@ Format based on [Keep a Changelog](https://keepachangelog.com/).
 - Policy: placeholders only in docs/examples (`your_password_here`, etc.)
 
 ### Added
-- **Support Development** — butoane, servicii, Options Flow, donate via [hidro-premierenergy.ro/donate](https://hidro-premierenergy.ro/donate)
+- **Support Development** — butoane, servicii, Options Flow, donate via [PayPal.Me](https://paypal.me/solovip)
 - Export **Support Bundle** ZIP redactat (fără parole/tokenuri/cookies)
 - Servicii: `open_support_link`, `export_support_bundle`, `report_issue`
 - GitHub: FUNDING.yml, SUPPORT.md, issue templates, Discussions links

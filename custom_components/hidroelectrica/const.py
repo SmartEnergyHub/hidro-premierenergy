@@ -30,4 +30,4 @@ STORAGE_KEY_SESSION: Final = "hidroelectrica.session"
 
 REPAIR_AUTH_FAILED: Final = "auth_failed"
 
-URL_DONATE: Final = "https://hidro-premierenergy.ro/donate"
+URL_DONATE: Final = "https://paypal.me/solovip"
