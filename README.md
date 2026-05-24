@@ -21,6 +21,7 @@ Integrări custom Home Assistant pentru portalurile românești de utilități �
 
 | Document | Conținut |
 |----------|----------|
+| **[docs/HACS_INSTALL.md](docs/HACS_INSTALL.md)** | **Instalare via HACS** — custom repo, update, verificare |
 | **[docs/INSTALLATION.md](docs/INSTALLATION.md)** | **Ghid complet instalare** — dependențe, pași, verificări SSH |
 | [docs/MIGRATION.md](docs/MIGRATION.md) | Migrare de la shell_command / scripturi legacy |
 | [docs/TROUBLESHOOTING.md](docs/TROUBLESHOOTING.md) | Depanare |
