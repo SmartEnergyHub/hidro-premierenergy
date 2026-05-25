@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import logging
+from pathlib import Path
 from typing import Any
 
 import requests
@@ -56,15 +57,23 @@ class PremierApiClient:
         }
 
     def download_invoice_pdf(self, invoice_number: str, dest_dir) -> str | None:
-        """Download invoice PDF if API supports it."""
+        """Download invoice PDF (direct sau redirect API)."""
+        path = Path(dest_dir) / f"{invoice_number}.pdf"
+        try:
+            url = f"{API_BASE}/facturi/{invoice_number}/pdf"
+            r = requests.get(url, headers=self._headers, timeout=90)
+            if r.status_code == 200 and r.content[:4] == b"%PDF":
+                path.write_bytes(r.content)
+                return str(path)
+        except Exception as exc:
+            _LOGGER.debug("PDF direct: %s", exc)
         try:
             data = self._get(f"facturi/pdf?OPBEL={invoice_number}")
             if isinstance(data, dict) and data.get("url"):
                 pdf = requests.get(data["url"], timeout=90)
                 pdf.raise_for_status()
-                path = dest_dir / f"{invoice_number}.pdf"
                 path.write_bytes(pdf.content)
                 return str(path)
         except Exception as exc:
-            _LOGGER.debug("PDF download fallback: %s", exc)
+            _LOGGER.debug("PDF redirect: %s", exc)
         return None

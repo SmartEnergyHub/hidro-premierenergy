@@ -101,6 +101,40 @@ class PremierCoordinator(DataUpdateCoordinator[dict[str, Any]]):
             )
         )
 
+    async def async_send_index(self, index: int) -> str:
+        token = await self.hass.async_add_executor_job(self._auth.refresh_token)
+        result = await self.hass.async_add_executor_job(
+            lambda: self._send_index_sync(index, token)
+        )
+        await self.async_request_refresh()
+        return result
+
+    async def async_send_last_invoice_telegram(self) -> str:
+        from pathlib import Path
+
+        from .lib.send_last_invoice_core import send_last_invoice_telegram_sync
+
+        secrets_dir = Path(self.hass.config.config_dir) / DOMAIN
+        return await self.hass.async_add_executor_job(
+            lambda: send_last_invoice_telegram_sync(
+                self._auth,
+                self.storage.invoices_dir,
+                coordinator_data=self.data,
+                secrets_dir=secrets_dir,
+            )
+        )
+
+    def _send_index_sync(self, index: int, token: str) -> str:
+        from .lib.send_index_core import send_index_sync
+
+        secrets_dir = Path(self.hass.config.config_dir) / DOMAIN
+        return send_index_sync(
+            index,
+            token,
+            self.data,
+            secrets_dir=secrets_dir,
+        )
+
     def export_debug(self) -> dict[str, Any]:
         token = self._auth.read_token()
         margin = self._token_margin(token) if token else None

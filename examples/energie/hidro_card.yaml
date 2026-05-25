@@ -1,0 +1,13 @@
+# Fragment card Lovelace + scripturi — alătură hidro_card.yaml pe HA
+# Buton Trimite index → serviciu integrare (nu shell_command legacy)
+
+script:
+  hidro_trimite_index:
+    alias: Hidroelectrica — trimite index
+    mode: single
+    sequence:
+      - action: hidroelectrica.send_index
+        data:
+          index: "{{ states('input_number.hidro_index_curent') | int(0) }}"
+
+# În packages/energie/hidro_card.yaml — înlocuiește shell_command.hidro_send_index cu același serviciu.

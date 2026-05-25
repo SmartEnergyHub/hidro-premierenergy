@@ -1,0 +1,20 @@
+# =============================================================================
+# Bootstrap Chromium în containerul Home Assistant (HA OS)
+# După update major HA Core, pachetele apk din container se pierd.
+#
+# IMPORTANT: adaugă shell_command în configuration.yaml (root), NU doar aici:
+#
+# shell_command:
+#   ha_browser_deps_bootstrap: >
+#     apk add --no-cache chromium chromium-chromedriver xvfb
+# =============================================================================
+
+automation:
+  - id: ha_browser_deps_bootstrap
+    alias: "Energie — bootstrap Chromium în container HA"
+    mode: single
+    triggers:
+      - trigger: homeassistant
+        event: start
+    actions:
+      - action: shell_command.ha_browser_deps_bootstrap

@@ -19,6 +19,7 @@ from .const import (
     CONF_USERNAME,
     DOMAIN,
 )
+from .lib.common.browser_paths import BrowserDepsMissingError, is_browser_deps_error
 from .lib.ha_session import ensure_session, setup_storage_dir
 from .lib.secrets_sync import write_secrets_sync
 
@@ -64,9 +65,17 @@ class HidroelectricaConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 ok = await self.hass.async_add_executor_job(ensure_session)
                 if not ok:
                     raise RuntimeError("Login failed")
+            except BrowserDepsMissingError as err:
+                _LOGGER.error("Hidro browser deps missing: %s", err)
+                errors["base"] = "missing_browser"
             except Exception as err:
                 _LOGGER.error("Hidro validation failed: %s", err)
-                errors["base"] = "invalid_auth"
+                if is_browser_deps_error(err):
+                    errors["base"] = "missing_browser"
+                elif "unable to connect to renderer" in str(err).lower():
+                    errors["base"] = "browser_crash"
+                else:
+                    errors["base"] = "invalid_auth"
             else:
                 return self.async_create_entry(
                     title=f"Hidroelectrica ({user_input[CONF_USERNAME]})",

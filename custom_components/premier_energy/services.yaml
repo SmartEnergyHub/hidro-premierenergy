@@ -35,6 +35,12 @@ send_index:
           max: 9999999
           mode: box
 
+send_last_invoice_telegram:
+  fields:
+    entry_id:
+      selector:
+        text:
+
 export_debug:
   fields:
     entry_id:

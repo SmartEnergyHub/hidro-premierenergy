@@ -13,6 +13,7 @@ from homeassistant.helpers import selector
 
 from .const import CONF_EMAIL, DOMAIN
 from .lib.auth_manager import PremierAuthManager
+from .lib.common.browser_paths import BrowserDepsMissingError, is_browser_deps_error
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -45,16 +46,24 @@ class PremierEnergyConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             try:
                 storage_dir = self.hass.config.path(DOMAIN, "validate")
                 auth = PremierAuthManager(
-                    email=user_input[CONF_EMAIL],
-                    password=user_input[CONF_PASSWORD],
+                    email=user_input[CONF_EMAIL].strip(),
+                    password=user_input[CONF_PASSWORD].strip(),
                     storage_dir=storage_dir,
                     browser_profile=storage_dir / "browser_profile",
                     debug_dir=storage_dir / "debug",
                 )
-                await self.hass.async_add_executor_job(auth.refresh_token)
+                await self.hass.async_add_executor_job(
+                    lambda: auth.refresh_token(force=True)
+                )
+            except BrowserDepsMissingError as err:
+                _LOGGER.error("Premier browser deps missing: %s", err)
+                errors["base"] = "missing_browser"
             except Exception as err:
                 _LOGGER.error("Premier login validation failed: %s", err)
-                errors["base"] = "invalid_auth"
+                if is_browser_deps_error(err):
+                    errors["base"] = "missing_browser"
+                else:
+                    errors["base"] = "invalid_auth"
             else:
                 return self.async_create_entry(
                     title=f"Premier Energy ({user_input[CONF_EMAIL]})",

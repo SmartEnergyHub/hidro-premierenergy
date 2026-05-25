@@ -5,7 +5,6 @@ from __future__ import annotations
 import base64
 import json
 import logging
-import os
 import re
 import time
 from pathlib import Path
@@ -19,14 +18,13 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 
+from .common.browser_paths import ensure_browser_deps, resolve_chromedriver, resolve_chromium_bin
 from .common.chromium_lock import ChromiumLock
 
 _LOGGER = logging.getLogger(__name__)
 
 API_BASE = "https://peremierenergy-portalclient.azurewebsites.net/api"
 PORTAL_URL = "https://my.premierenergy.ro"
-CHROMIUM_BIN = os.environ.get("CHROMIUM_PATH", "/usr/bin/chromium")
-CHROMEDRIVER = os.environ.get("CHROMEDRIVER_PATH", "/usr/bin/chromedriver")
 MAX_ATTEMPTS = 3
 LOGIN_WAIT_SECONDS = 90
 TOKEN_MARGIN_SECONDS = 1200
@@ -97,9 +95,12 @@ class PremierAuthManager:
         return None
 
     def _create_driver(self) -> webdriver.Chrome:
+        ensure_browser_deps()
+        chromium = resolve_chromium_bin()
+        chromedriver = resolve_chromedriver()
         self.browser_profile.mkdir(parents=True, exist_ok=True)
         opts = Options()
-        opts.binary_location = CHROMIUM_BIN
+        opts.binary_location = chromium
         opts.add_argument(f"--user-data-dir={self.browser_profile}")
         for arg in (
             "--headless=new",
@@ -111,7 +112,7 @@ class PremierAuthManager:
         ):
             opts.add_argument(arg)
         opts.add_experimental_option("excludeSwitches", ["enable-automation"])
-        driver = webdriver.Chrome(service=Service(CHROMEDRIVER), options=opts)
+        driver = webdriver.Chrome(service=Service(chromedriver), options=opts)
         driver.execute_cdp_cmd(
             "Page.addScriptToEvaluateOnNewDocument",
             {"source": 'Object.defineProperty(navigator, "webdriver", {get: () => undefined})'},
@@ -165,6 +166,18 @@ class PremierAuthManager:
         driver.find_element(By.ID, "next").click()
         deadline = time.time() + LOGIN_WAIT_SECONDS
         while time.time() < deadline:
+            src = driver.page_source.lower()
+            if any(
+                hint in src
+                for hint in (
+                    "password is incorrect",
+                    "parola este incorect",
+                    "parola introdus",
+                    "invalid username or password",
+                    "contul de utilizator nu exist",
+                )
+            ):
+                raise RuntimeError("Invalid email or password")
             token = self._extract_token(driver)
             if token and self.token_is_valid(token, margin=60):
                 return

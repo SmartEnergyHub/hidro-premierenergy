@@ -13,7 +13,8 @@
       }
     },
     "error": {
-      "invalid_auth": "Autentificare eșuată. Verifică user/parolă."
+      "invalid_auth": "Autentificare eșuată. Verifică user/parolă.",
+      "missing_browser": "Chromium/ChromeDriver/Xvfb are missing inside the Home Assistant container. In SSH terminal run: docker exec homeassistant apk add --no-cache chromium chromium-chromedriver xvfb — then retry."
     },
     "abort": {
       "already_configured": "Contul este deja configurat."

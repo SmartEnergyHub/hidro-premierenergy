@@ -17,14 +17,39 @@
 
 ## Premier — "invalid_auth" at setup
 
+**Cauză frecventă (HA OS):** Chromium există pe **host** (`which chromium` în SSH), dar integrarea rulează în **containerul** `homeassistant`, unde `/usr/bin/chromium` lipsește. Mesajul generic `invalid_auth` apare chiar dacă email/parola sunt corecte.
+
+**Verificare:**
+
+```bash
+docker exec homeassistant sh -c 'ls /usr/bin/chromium /usr/bin/chromedriver'
+```
+
+**Fix (o dată; se pierde la update major HA Core — vezi mai jos):**
+
+```bash
+docker exec homeassistant apk add --no-cache chromium chromium-chromedriver xvfb
+```
+
+Apoi reîncearcă **Setări → Integrări → Adaugă integrare → Premier Energy**.
+
+**Persistență după update HA:** vezi [examples/legacy/browser_deps_bootstrap.yaml](../examples/legacy/browser_deps_bootstrap.yaml) (automation la pornire).
+
+**Dacă Chromium e instalat dar tot eșuează:**
+
 - Verify email/password at https://my.premierenergy.ro
 - Check logs: `/config/premier_energy/<entry_id>/` or HA → Settings → System → Logs
-- Ensure Chromium + chromedriver exist: `which chromium chromedriver`
 
 ## Hidro — "invalid_auth" at setup
 
+**Aceeași cauză ca la Premier** — Chromium trebuie în containerul `homeassistant`, nu doar pe host:
+
+```bash
+docker exec homeassistant apk add --no-cache chromium chromium-chromedriver xvfb
+```
+
 - Verify credentials at https://ihidro.ro/portal/
-- Xvfb required: `which Xvfb` → `/usr/bin/Xvfb`
+- Xvfb required inside container: `docker exec homeassistant which Xvfb`
 - Check reCAPTCHA errors in logs — headed browser must work (not headless)
 
 ## Session keeps failing (Hidroelectrica)

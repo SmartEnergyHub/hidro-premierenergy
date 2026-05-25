@@ -3,6 +3,19 @@
 All notable changes to this project are documented here.
 Format based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [1.1.3] - 2026-05-25
+
+### Added
+- Transmitere index: `hidroelectrica.send_index`, `premier_energy.send_index`
+- Factură Telegram: `send_last_invoice_telegram` (Hidro + Premier, refresh token)
+- `examples/energie/telegram_commands.yaml` — `/indexhidro`, `/indexgaze`, `/facturahidroelectrica`, `/facturagaze`
+- Notificări Telegram succes/eșec la index
+
+### Fixed
+- `/facturagaze` — `jwt expired` (token reînnoit înainte de PDF)
+- `send_index` → `coordinator.async_send_index`; fallback `input_number.*`
+- PDF Premier: `GET /facturi/{OPBEL}/pdf`
+
 ## [1.1.2] - 2026-05-25
 
 ### Fixed

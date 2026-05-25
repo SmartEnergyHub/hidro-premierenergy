@@ -18,6 +18,7 @@ from .const import (
     SERVICE_FORCE_LOGIN,
     SERVICE_REFRESH_SESSION,
     SERVICE_SEND_INDEX,
+    SERVICE_SEND_LAST_INVOICE_TELEGRAM,
 )
 from .coordinator import HidroCoordinator
 from .support_services import register_support_services
@@ -81,8 +82,19 @@ def _register_services(hass: HomeAssistant) -> None:
             _LOGGER.info("Hidro PDF: %s", path)
 
     async def send_index(call: ServiceCall) -> None:
-        index_val = call.data.get("index")
-        _LOGGER.info("send_index called with index=%s (extend via send_index module)", index_val)
+        from .lib.index_resolve import resolve_index_from_call
+
+        index_val = resolve_index_from_call(hass, call)
+        entry_id = call.data.get("entry_id")
+        for coord in _coords(hass, entry_id):
+            result = await coord.async_send_index(index_val)
+            _LOGGER.info("Hidro send_index OK: %s — %s", index_val, result[:120])
+
+    async def send_last_invoice_telegram(call: ServiceCall) -> None:
+        entry_id = call.data.get("entry_id")
+        for coord in _coords(hass, entry_id):
+            numar = await coord.async_send_last_invoice_telegram()
+            _LOGGER.info("Hidro factură Telegram: %s", numar)
 
     async def export_debug(call: ServiceCall) -> None:
         for coord in _coords(hass, call.data.get("entry_id")):
@@ -104,6 +116,12 @@ def _register_services(hass: HomeAssistant) -> None:
         SERVICE_SEND_INDEX,
         send_index,
         schema=schema_entry.extend({vol.Optional("index"): vol.Coerce(int)}),
+    )
+    hass.services.async_register(
+        DOMAIN,
+        SERVICE_SEND_LAST_INVOICE_TELEGRAM,
+        send_last_invoice_telegram,
+        schema=schema_entry,
     )
     hass.services.async_register(DOMAIN, SERVICE_EXPORT_DEBUG, export_debug, schema=schema_entry)
 

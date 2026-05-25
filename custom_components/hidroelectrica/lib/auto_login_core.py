@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import os
+import shutil
 import time
 
 from selenium import webdriver
@@ -12,10 +14,9 @@ from selenium.webdriver.common.by import By
 
 from .common.chromium_lock import ChromiumLock
 from .common.xvfb import ensure_xvfb
+from .common.browser_paths import ensure_browser_deps, resolve_chromedriver, resolve_chromium_bin
 from .config import (
     BROWSER_PROFILE,
-    CHROMEDRIVER,
-    CHROMIUM_BIN,
     MAX_RETRIES,
     PORTAL_LOGIN,
     RECAPTCHA_SITE_KEY,
@@ -32,21 +33,47 @@ from .session import (
 
 log = setup_logger("hidro.auto_login")
 
+_CHROME_STABILITY_ARGS = (
+    "--no-sandbox",
+    "--disable-dev-shm-usage",
+    "--disable-gpu",
+    "--no-zygote",
+    "--disable-software-rasterizer",
+    "--window-size=1920,1080",
+    "--disable-blink-features=AutomationControlled",
+)
+
+
+def _reset_browser_profile() -> None:
+    if not BROWSER_PROFILE.is_dir():
+        return
+    backup = BROWSER_PROFILE.with_name(f"{BROWSER_PROFILE.name}_broken_{int(time.time())}")
+    try:
+        BROWSER_PROFILE.rename(backup)
+        log.warning("Profil browser resetat (vechi: %s)", backup.name)
+    except OSError as exc:
+        log.warning("Nu am putut reseta profilul browser: %s", exc)
+        shutil.rmtree(BROWSER_PROFILE, ignore_errors=True)
+
 
 def _login_with_browser(username: str, password: str) -> bool:
-    ensure_xvfb()
+    ensure_browser_deps(require_xvfb=True)
+    display = ensure_xvfb()
+    chromium = resolve_chromium_bin()
+    chromedriver = resolve_chromedriver()
     BROWSER_PROFILE.mkdir(parents=True, exist_ok=True)
 
     opts = Options()
-    opts.binary_location = CHROMIUM_BIN
-    opts.add_argument("--no-sandbox")
-    opts.add_argument("--disable-dev-shm-usage")
-    opts.add_argument("--window-size=1920,1080")
+    opts.binary_location = chromium
+    for arg in _CHROME_STABILITY_ARGS:
+        opts.add_argument(arg)
     opts.add_argument(f"--user-data-dir={BROWSER_PROFILE}")
-    opts.add_argument("--disable-blink-features=AutomationControlled")
     opts.add_experimental_option("excludeSwitches", ["enable-automation"])
 
-    driver = webdriver.Chrome(service=Service(CHROMEDRIVER), options=opts)
+    driver = webdriver.Chrome(
+        service=Service(chromedriver, env={"DISPLAY": display}),
+        options=opts,
+    )
     driver.execute_cdp_cmd(
         "Page.addScriptToEvaluateOnNewDocument",
         {"source": 'Object.defineProperty(navigator, "webdriver", {get: () => undefined})'},
@@ -127,6 +154,8 @@ def auto_login_sync() -> bool:
         except Exception as exc:
             last_err = exc
             log.error("Auto-login attempt %d: %s", attempt, exc)
+            if "unable to connect to renderer" in str(exc).lower() and attempt < MAX_RETRIES:
+                _reset_browser_profile()
             if attempt < MAX_RETRIES:
                 time.sleep(5 * attempt)
     log.error("Auto-login failed: %s", last_err)

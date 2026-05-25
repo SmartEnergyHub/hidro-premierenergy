@@ -1,0 +1,48 @@
+# Comenzi Telegram — transmitere index autocitire
+# Copiază în packages/energie/ sau include din configuration.yaml
+# Necesită: integrări HACS + input_number.hidro_index_curent + input_number.index_gaz_premier
+
+automation:
+  - id: telegram_index_hidro_cmd
+    alias: Telegram Index Hidroelectrica
+    description: "/indexhidro [valoare] — transmite index electricitate"
+    mode: single
+    triggers:
+      - trigger: event
+        event_type: telegram_command
+        event_data:
+          command: /indexhidro
+    variables:
+      idx: >-
+        {% set args = trigger.event.data.args | default([]) %}
+        {% if args | length > 0 and args[0] | trim != '' %}
+          {{ args[0] | int }}
+        {% else %}
+          {{ states('input_number.hidro_index_curent') | int(0) }}
+        {% endif %}
+    actions:
+      - action: hidroelectrica.send_index
+        data:
+          index: "{{ idx }}"
+
+  - id: telegram_index_premier_cmd
+    alias: Telegram Index Premier Energy
+    description: "/indexgaze [valoare] — transmite index gaze naturale"
+    mode: single
+    triggers:
+      - trigger: event
+        event_type: telegram_command
+        event_data:
+          command: /indexgaze
+    variables:
+      idx: >-
+        {% set args = trigger.event.data.args | default([]) %}
+        {% if args | length > 0 and args[0] | trim != '' %}
+          {{ args[0] | int }}
+        {% else %}
+          {{ states('input_number.index_gaz_premier') | int(0) }}
+        {% endif %}
+    actions:
+      - action: premier_energy.send_index
+        data:
+          index: "{{ idx }}"

@@ -106,6 +106,35 @@ class HidroCoordinator(DataUpdateCoordinator[dict[str, Any]]):
         await self.hass.async_add_executor_job(ensure_session)
         return await self.hass.async_add_executor_job(lambda: download_invoice_pdf(invoice_number))
 
+    async def async_send_index(self, index: int) -> str:
+        await self.hass.async_add_executor_job(self._prepare_sync_env)
+        result = await self.hass.async_add_executor_job(
+            lambda: self._send_index_sync(index)
+        )
+        await self.async_request_refresh()
+        return result
+
+    async def async_send_last_invoice_telegram(self) -> str:
+        await self.hass.async_add_executor_job(self._prepare_sync_env)
+        return await self.hass.async_add_executor_job(self._send_last_invoice_telegram_sync)
+
+    def _send_last_invoice_telegram_sync(self) -> str:
+        from .lib.send_last_invoice_core import send_last_invoice_telegram_sync
+
+        return send_last_invoice_telegram_sync(
+            telegram_bot_token=self.entry.data.get(CONF_TELEGRAM_BOT_TOKEN, ""),
+            telegram_chat_id=self.entry.data.get(CONF_TELEGRAM_CHAT_ID, ""),
+        )
+
+    def _send_index_sync(self, index: int) -> str:
+        from .lib.send_index_core import send_index_sync
+
+        return send_index_sync(
+            index,
+            telegram_bot_token=self.entry.data.get(CONF_TELEGRAM_BOT_TOKEN, ""),
+            telegram_chat_id=self.entry.data.get(CONF_TELEGRAM_CHAT_ID, ""),
+        )
+
     def export_debug(self) -> dict[str, Any]:
         from .lib.config import HEALTH_FILE, SESSION_FILE
         from .lib.session import load_session

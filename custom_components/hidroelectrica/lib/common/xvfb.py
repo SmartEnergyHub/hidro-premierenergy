@@ -25,7 +25,7 @@ def ensure_xvfb(display: str = DISPLAY) -> str:
         stderr=subprocess.DEVNULL,
     )
     PID_FILE.write_text(str(proc.pid), encoding="utf-8")
-    for _ in range(20):
+    for _ in range(40):
         if _display_alive(display):
             return display
         time.sleep(0.25)
@@ -33,28 +33,33 @@ def ensure_xvfb(display: str = DISPLAY) -> str:
 
 
 def _display_alive(display: str) -> bool:
+    os.environ["DISPLAY"] = display
     try:
-        r = subprocess.run(
+        result = subprocess.run(
             ["pgrep", "-x", "Xvfb"],
             capture_output=True,
             timeout=5,
         )
-        return r.returncode == 0 and os.environ.get("DISPLAY") == display or _test_display(display)
+        if result.returncode != 0:
+            return False
     except Exception:
         return False
+    return _test_display(display)
 
 
 def _test_display(display: str) -> bool:
     try:
-        r = subprocess.run(
+        result = subprocess.run(
             ["sh", "-c", f"DISPLAY={display} xdpyinfo >/dev/null 2>&1"],
             timeout=5,
         )
-        return r.returncode == 0
+        if result.returncode == 0:
+            return True
     except Exception:
-        # xdpyinfo poate lipsi pe Alpine — verificăm doar proces
-        try:
-            r = subprocess.run(["pgrep", "-x", "Xvfb"], capture_output=True, timeout=5)
-            return r.returncode == 0
-        except Exception:
-            return False
+        pass
+    # xdpyinfo poate lipsi pe Alpine — dacă Xvfb rulează, continuăm
+    try:
+        result = subprocess.run(["pgrep", "-x", "Xvfb"], capture_output=True, timeout=5)
+        return result.returncode == 0
+    except Exception:
+        return False

@@ -9,6 +9,17 @@ Ghid complet pentru **Home Assistant OS** (recomandat: Raspberry Pi 4/5, x86 min
 
 Ambele integrări sunt **FULL AUTO**: introduci user/parolă o singură dată în UI; token JWT (Premier) sau sesiune + cookies (Hidro) se reînnoiesc automat.
 
+### Comenzi Telegram (transmitere index)
+
+| Comandă | Acțiune |
+|---------|---------|
+| `/indexhidro` | Trimite index electricitate (din `input_number.hidro_index_curent` sau argument: `/indexhidro 23738`) |
+| `/indexgaze` | Trimite index gaze (din `input_number.index_gaz_premier` sau `/indexgaze 12345`) |
+
+Copiază `examples/energie/telegram_index_commands.yaml` în `packages/energie/` pe HA, apoi **Reload automations** (fără restart complet).
+
+Servicii HA: `hidroelectrica.send_index`, `premier_energy.send_index` (opțional `index:` în `data`).
+
 ---
 
 ## 1. Cerințe prealabile

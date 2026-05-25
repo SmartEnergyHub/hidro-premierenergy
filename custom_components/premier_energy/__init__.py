@@ -18,6 +18,7 @@ from .const import (
     SERVICE_FORCE_LOGIN,
     SERVICE_REFRESH_SESSION,
     SERVICE_SEND_INDEX,
+    SERVICE_SEND_LAST_INVOICE_TELEGRAM,
 )
 from .coordinator import PremierCoordinator
 from .support_services import register_support_services
@@ -87,7 +88,19 @@ def _register_services(hass: HomeAssistant) -> None:
             _LOGGER.info("Premier debug: %s", coord.export_debug())
 
     async def send_index(call: ServiceCall) -> None:
-        _LOGGER.warning("send_index: use entity button or extend with index value in service call")
+        from .lib.index_resolve import resolve_index_from_call
+
+        index_val = resolve_index_from_call(hass, call)
+        entry_id = call.data.get("entry_id")
+        for coord in _coords(hass, entry_id):
+            result = await coord.async_send_index(index_val)
+            _LOGGER.info("Premier send_index OK: %s — %s", index_val, result[:120])
+
+    async def send_last_invoice_telegram(call: ServiceCall) -> None:
+        entry_id = call.data.get("entry_id")
+        for coord in _coords(hass, entry_id):
+            numar = await coord.async_send_last_invoice_telegram()
+            _LOGGER.info("Premier factură Telegram: %s", numar)
 
     hass.services.async_register(
         DOMAIN,
@@ -128,6 +141,12 @@ def _register_services(hass: HomeAssistant) -> None:
                 vol.Optional("index"): vol.Coerce(int),
             }
         ),
+    )
+    hass.services.async_register(
+        DOMAIN,
+        SERVICE_SEND_LAST_INVOICE_TELEGRAM,
+        send_last_invoice_telegram,
+        schema=vol.Schema({vol.Optional("entry_id"): cv.string}),
     )
 
 
