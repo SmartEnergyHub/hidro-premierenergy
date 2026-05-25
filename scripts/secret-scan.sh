@@ -28,6 +28,7 @@ SCAN_DIRS=(custom_components docs examples scripts .github)
 PATTERNS=(
   'eyJ[A-Za-z0-9_-]{10,}\.[A-Za-z0-9_-]+\.'
   'telegram_bot_token.*[0-9]{8,}:'
+  '[0-9]{8,}:[A-Za-z0-9_-]{20,}'
   'BEGIN (RSA |OPENSSH )?PRIVATE KEY'
   'ghp_[A-Za-z0-9]{20,}'
   'github_pat_[A-Za-z0-9_]{20,}'

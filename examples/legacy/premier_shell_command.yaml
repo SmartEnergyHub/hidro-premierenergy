@@ -14,11 +14,10 @@ shell_command:
     /config/premier_energy/venv/bin/python3 /config/premier_energy/health_check.py
 
   premier_refresh_token: >
-    flock -w 180 /config/.chromium_automation.lock -c
-    'export PATH=/usr/bin:/bin:/usr/sbin:/sbin;
+    export PATH=/usr/bin:/bin:/usr/sbin:/sbin;
     export CHROMIUM_PATH=/usr/bin/chromium;
     export CHROMEDRIVER_PATH=/usr/bin/chromedriver;
-    /config/premier_energy/venv/bin/python3 /config/premier_energy/refresh_token.py'
+    /config/premier_energy/venv/bin/python3 /config/premier_energy/refresh_token_simple.py
 
 # --- packages/energie/premier_token_refresh.yaml (FĂRĂ bloc shell_command duplicat) ---
 

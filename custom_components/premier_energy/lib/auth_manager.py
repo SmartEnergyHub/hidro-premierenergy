@@ -102,13 +102,17 @@ class PremierAuthManager:
         opts = Options()
         opts.binary_location = chromium
         opts.add_argument(f"--user-data-dir={self.browser_profile}")
+        import os
+
+        if not os.environ.get("DISPLAY"):
+            opts.add_argument("--headless=new")
         for arg in (
-            "--headless=new",
             "--no-sandbox",
             "--disable-dev-shm-usage",
             "--disable-gpu",
             "--window-size=1280,900",
             "--disable-blink-features=AutomationControlled",
+            "--disable-software-rasterizer",
         ):
             opts.add_argument(arg)
         opts.add_experimental_option("excludeSwitches", ["enable-automation"])
@@ -206,6 +210,13 @@ class PremierAuthManager:
                     TOKEN_MARGIN_SECONDS,
                 )
                 force = True
+
+        from .host_refresh import host_ssh_available, refresh_via_host
+
+        if host_ssh_available() and refresh_via_host():
+            token = self.read_token()
+            if token and self.token_is_valid(token, margin=60):
+                return token
 
         last_err: Exception | None = None
         for attempt in range(1, MAX_ATTEMPTS + 1):

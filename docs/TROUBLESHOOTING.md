@@ -1,5 +1,29 @@
 # Troubleshooting
 
+## Telegram — `/facturagaze` sau `/indexgaze` nu răspunde
+
+**Cauză (HA OS):** `shell_command` și serviciile integrării rulează în **containerul** `homeassistant`. Chromium/Selenium eșuează acolo (`DevToolsActivePort`, `session not created`) → token JWT expirat → comanda pare să „nu facă nimic”.
+
+**Verificare:**
+
+```bash
+docker exec homeassistant /config/premier_energy/venv/bin/python3 /config/premier_energy/refresh_token_simple.py
+# Eșec aici = normal în container
+
+ssh root@localhost /config/premier_energy/venv/bin/python3 /config/premier_energy/refresh_token_simple.py
+# Succes TOKEN_OK = Chromium funcționează pe HOST
+```
+
+**Fix (v1.1.4+):**
+
+1. Rulează o dată: `scripts/setup-ha-premier-host-ssh.sh` (SSH container → host `172.30.32.1`)
+2. Copiază scripturile din `examples/legacy/` în `/config/premier_energy/`
+3. Completează `/config/premier_energy/secrets.json` (vezi `premier_secrets.json.example`)
+4. Folosește `examples/energie/telegram_commands.yaml` (mesaj „⏳ Procesez...” + shell_command)
+5. Index: **`/indexhidro 23750`** și **`/indexgaze 12345`** — cifra trebuie în comandă
+
+Integrarea HACS folosește același refresh SSH→host în `auth_manager.refresh_token()`.
+
 ## Premier — token expirat după restart HA
 
 **Cauză (setup legacy YAML):** `shell_command.premier_health_check` definit doar în `packages/` — HA nu înregistrează serviciul → watchdog-ul eșuează → tokenul nu se reînnoiește.

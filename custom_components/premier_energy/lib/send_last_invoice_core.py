@@ -45,7 +45,11 @@ def send_last_invoice_telegram_sync(
     if not telegram_bot_token or not telegram_chat_id:
         raise RuntimeError("Telegram neconfigurat (secrets.json sau integrare)")
 
-    token = auth.refresh_token()
+    token = auth.read_token()
+    if not token or not auth.token_is_valid(token, margin=120):
+        token = auth.refresh_token()
+    elif not auth.validate_token_via_api(token):
+        token = auth.refresh_token()
     client = PremierApiClient(token)
     data = coordinator_data if coordinator_data and coordinator_data.get("numar_factura") else client.fetch_all()
 

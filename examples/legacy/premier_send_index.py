@@ -1,143 +1,65 @@
+#!/usr/bin/env python3
+"""Trimite index gaze Premier + notificare Telegram."""
+from __future__ import annotations
+
 import json
-import requests
 import sys
 
-# =========================
-# TELEGRAM
-# =========================
+import requests
 
-TELEGRAM_BOT_TOKEN = "8467414975:AAEtcgGiNQBObqTIxgZEsxQw3tsDPb6pmG4"
-TELEGRAM_CHAT_ID = "742829836"
+from premier_session import API, ensure_token, headers, load_data, load_secrets, read_token, refresh_token
 
-# =========================
-# LOAD TOKEN
-# =========================
 
-with open("/config/premier_energy/token.txt") as f:
-    token = f.read().strip()
+def _payload(index: int, data: dict) -> dict:
+    locuri = data.get("locuri") or []
+    loc = locuri[0] if locuri else {}
+    loc_consum = loc.get("LocConsum") or loc.get("locConsum") or ""
+    contract = str(loc.get("Contract") or loc.get("contract") or "")
+    if not loc_consum or not contract:
+        raise RuntimeError("locConsum/contract lipsesc — rulează integrarea Premier sau refresh data.json")
+    return {
+        "index": str(index),
+        "locConsum": str(loc_consum),
+        "sursa": "portalClienti",
+        "contract": contract,
+    }
 
-# =========================
-# LOAD DATA
-# =========================
 
-with open("/config/premier_energy/data.json") as f:
-    data = json.load(f)
+def _notify(secrets: dict, text: str) -> None:
+    bot = (secrets.get("telegram_bot_token") or "").strip()
+    chat = (secrets.get("telegram_chat_id") or "").strip()
+    if bot and chat and bot != "YOUR_TELEGRAM_BOT_TOKEN":
+        requests.post(
+            f"https://api.telegram.org/bot{bot}/sendMessage",
+            data={"chat_id": chat, "text": text[:4000]},
+            timeout=30,
+        )
 
-# =========================
-# ARGUMENT INDEX
-# =========================
 
-with open("/config/.storage/core.restore_state") as f:
-    restore = json.load(f)
+def main() -> int:
+    if len(sys.argv) < 2 or not str(sys.argv[1]).strip():
+        print("INDEX_REQUIRED — folosește /indexgaze 12345", file=sys.stderr)
+        return 1
+    index = int(float(sys.argv[1]))
+    secrets = load_secrets()
+    data = load_data()
+    token = ensure_token()
+    h = {**headers(token), "Content-Type": "application/json"}
+    payload = _payload(index, data)
+    r = requests.post(f"{API}/index", headers=h, json=payload, timeout=30)
+    if r.status_code == 401:
+        refresh_token()
+        token = read_token()
+        h = {**headers(token), "Content-Type": "application/json"}
+        r = requests.post(f"{API}/index", headers=h, json=payload, timeout=30)
+    body = r.text[:500]
+    if r.status_code == 200:
+        _notify(secrets, f"✅ Index gaze Premier trimis\n\n🔢 {index}\n📨 {body}")
+        print("OK", index)
+        return 0
+    _notify(secrets, f"❌ Eroare index gaze\n\n🔢 {index}\nHTTP {r.status_code}\n{body}")
+    return 1
 
-INDEX = None
 
-for item in restore["data"]:
-
-    if item["state"]["entity_id"] == "input_number.index_gaz_premier":
-
-        INDEX = item["state"]["state"]
-        break
-
-if not INDEX:
-    raise Exception("INDEX_NOT_FOUND")
-
-# =========================
-# CLEAN INDEX
-# =========================
-
-INDEX = int(float(INDEX))
-
-# =========================
-# PAYLOAD
-# =========================
-
-payload = {
-    "index": str(INDEX),
-    "locConsum": "PEYTRVIDE070133",
-    "sursa": "portalClienti",
-    "contract": "3000197492"
-}
-
-# =========================
-# HEADERS
-# =========================
-
-headers = {
-    "Premier-Auth": f"Bearer {token}",
-    "Content-Type": "application/json"
-}
-
-# =========================
-# REQUEST
-# =========================
-
-url = "https://peremierenergy-portalclient.azurewebsites.net/api/index"
-
-response = requests.post(
-    url,
-    headers=headers,
-    json=payload,
-    timeout=30
-)
-
-# =========================
-# DEBUG
-# =========================
-
-print("STATUS:")
-print(response.status_code)
-
-print("\nRESPONSE:")
-print(response.text)
-
-# =========================
-# TELEGRAM MESSAGE
-# =========================
-
-if response.status_code == 200:
-
-    msg = f"""
-✅ INDEX GAZ TRIMIS
-
-🔢 Index: {INDEX}
-
-📨 Răspuns Premier:
-{response.text}
-"""
-
-else:
-
-    msg = f"""
-❌ EROARE TRIMITERE INDEX
-
-🔢 Index: {INDEX}
-
-HTTP:
-{response.status_code}
-
-📨 Răspuns:
-{response.text}
-"""
-
-# =========================
-# SEND TELEGRAM
-# =========================
-
-telegram_url = f"https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}/sendMessage"
-
-telegram_response = requests.post(
-    telegram_url,
-    data={
-        "chat_id": TELEGRAM_CHAT_ID,
-        "text": msg,
-        "disable_notification": False
-    },
-    timeout=30
-)
-
-print("\nTELEGRAM STATUS:")
-print(telegram_response.status_code)
-
-print("\nTELEGRAM RESPONSE:")
-print(telegram_response.text)
+if __name__ == "__main__":
+    raise SystemExit(main())

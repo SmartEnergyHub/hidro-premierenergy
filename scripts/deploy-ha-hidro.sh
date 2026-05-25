@@ -4,8 +4,8 @@
 set -euo pipefail
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 SRC="${ROOT}/custom_components/hidroelectrica"
-HA_SSH="${HA_SSH:-root@moi-cab.dyndns.tv}"
-HA_SSH_PORT="${HA_SSH_PORT:-2233}"
+HA_SSH="${HA_SSH:?Set HA_SSH=root@YOUR_HA_HOST}"
+HA_SSH_PORT="${HA_SSH_PORT:-22}"
 DEST="/config/custom_components/hidroelectrica"
 
 RSYNC_SSH="ssh -p ${HA_SSH_PORT} -o StrictHostKeyChecking=no"

@@ -9,16 +9,23 @@ Ghid complet pentru **Home Assistant OS** (recomandat: Raspberry Pi 4/5, x86 min
 
 Ambele integrări sunt **FULL AUTO**: introduci user/parolă o singură dată în UI; token JWT (Premier) sau sesiune + cookies (Hidro) se reînnoiesc automat.
 
-### Comenzi Telegram (transmitere index)
+### Comenzi Telegram (facturi + transmitere index)
 
 | Comandă | Acțiune |
 |---------|---------|
-| `/indexhidro` | Trimite index electricitate (din `input_number.hidro_index_curent` sau argument: `/indexhidro 23738`) |
-| `/indexgaze` | Trimite index gaze (din `input_number.index_gaz_premier` sau `/indexgaze 12345`) |
+| `/facturagaze` | Ultima factură gaze PDF pe Telegram |
+| `/facturahidroelectrica` | Ultima factură electricitate PDF |
+| `/indexhidro 23750` | Trimite index electricitate (cifra obligatorie în comandă) |
+| `/indexgaze 12345` | Trimite index gaze naturale |
 
-Copiază `examples/energie/telegram_index_commands.yaml` în `packages/energie/` pe HA, apoi **Reload automations** (fără restart complet).
+**Pe HA OS (recomandat):** folosește `examples/energie/telegram_commands.yaml` + scripturi legacy din `examples/legacy/` (shell_command). Vezi [examples/legacy/README.md](../examples/legacy/README.md) și `scripts/setup-ha-premier-host-ssh.sh`.
 
-Servicii HA: `hidroelectrica.send_index`, `premier_energy.send_index` (opțional `index:` în `data`).
+1. Copiază `telegram_commands.yaml` în `packages/energie/`
+2. Înlocuiește `YOUR_TELEGRAM_CONFIG_ENTRY_ID` (Setări → Integrări → Telegram Bot)
+3. Adaugă `shell_command` din `examples/legacy/configuration_shell_commands.example.yaml`
+4. **Reload YAML** (Developer Tools) — fără restart complet
+
+Servicii HACS (alternativ): `hidroelectrica.send_index`, `premier_energy.send_index`, `send_last_invoice_telegram` — v1.1.4+ refresh token pe host via SSH când Chromium eșuează în container.
 
 ---
 

@@ -1,11 +1,13 @@
-# Comenzi Telegram — facturi + transmitere index (integrări HACS)
-# Copiază în /config/packages/energie/telegram_commands.yaml
-# Dezactivează duplicatele din automations.yaml (facturagaze / facturahidro / index*)
+# Comenzi Telegram — facturi + transmitere index (shell_command, recomandat pe HA OS)
+# 1. Copiază în /config/packages/energie/telegram_commands.yaml
+# 2. Înlocuiește YOUR_TELEGRAM_CONFIG_ENTRY_ID (Setări → Integrări → Telegram Bot → ⋮ → Configure)
+# 3. Adaugă shell_command din examples/legacy/configuration_shell_commands.example.yaml
+# 4. Developer Tools → YAML → Reload all YAML configuration
 
 automation:
   - id: telegram_factura_premier_cmd
     alias: Telegram Factura Gaze Premier
-    description: "/facturagaze — ultima factură PDF pe Telegram (token refresh automat)"
+    description: "/facturagaze — ultima factură PDF (refresh token automat)"
     mode: single
     triggers:
       - trigger: event
@@ -13,11 +15,15 @@ automation:
         event_data:
           command: /facturagaze
     actions:
-      - action: premier_energy.send_last_invoice_telegram
+      - action: telegram_bot.send_message
+        data:
+          config_entry_id: YOUR_TELEGRAM_CONFIG_ENTRY_ID
+          message: "⏳ Preiau factura gaze Premier..."
+      - action: shell_command.premier_send_last_invoice
 
   - id: telegram_factura_hidro_cmd
     alias: Telegram Factura Hidroelectrica
-    description: "/facturahidroelectrica — ultima factură PDF pe Telegram"
+    description: "/facturahidroelectrica — ultima factură PDF"
     mode: single
     triggers:
       - trigger: event
@@ -25,11 +31,15 @@ automation:
         event_data:
           command: /facturahidroelectrica
     actions:
-      - action: hidroelectrica.send_last_invoice_telegram
+      - action: telegram_bot.send_message
+        data:
+          config_entry_id: YOUR_TELEGRAM_CONFIG_ENTRY_ID
+          message: "⏳ Preiau factura Hidroelectrica..."
+      - action: shell_command.hidro_send_last_invoice
 
   - id: telegram_index_hidro_cmd
     alias: Telegram Index Hidroelectrica
-    description: "/indexhidro [valoare] — transmite index electricitate"
+    description: "/indexhidro 23750 — transmite index electricitate"
     mode: single
     triggers:
       - trigger: event
@@ -37,21 +47,33 @@ automation:
         event_data:
           command: /indexhidro
     variables:
-      idx: >-
-        {% set args = trigger.event.data.args | default([]) %}
-        {% if args | length > 0 and args[0] | trim != '' %}
-          {{ args[0] | int }}
-        {% else %}
-          {{ states('input_number.hidro_index_curent') | int(0) }}
-        {% endif %}
+      idx: "{{ trigger.event.data.args[0] | default('', true) | trim }}"
     actions:
-      - action: hidroelectrica.send_index
-        data:
-          index: "{{ idx }}"
+      - if:
+          - condition: template
+            value_template: "{{ idx != '' and idx is match('^[0-9]+$') }}"
+        then:
+          - action: telegram_bot.send_message
+            data:
+              config_entry_id: YOUR_TELEGRAM_CONFIG_ENTRY_ID
+              message: "⏳ Trimit index Hidro {{ idx }}..."
+          - action: shell_command.hidro_send_index
+            data:
+              variables:
+                index: "{{ idx | int }}"
+        else:
+          - action: telegram_bot.send_message
+            data:
+              config_entry_id: YOUR_TELEGRAM_CONFIG_ENTRY_ID
+              message: |
+                ⚡ Index Hidroelectrica
+
+                Trimite: /indexhidro 23750
+                (cifrele de pe contor)
 
   - id: telegram_index_premier_cmd
     alias: Telegram Index Premier Energy
-    description: "/indexgaze [valoare] — transmite index gaze naturale"
+    description: "/indexgaze 12345 — transmite index gaze naturale"
     mode: single
     triggers:
       - trigger: event
@@ -59,14 +81,26 @@ automation:
         event_data:
           command: /indexgaze
     variables:
-      idx: >-
-        {% set args = trigger.event.data.args | default([]) %}
-        {% if args | length > 0 and args[0] | trim != '' %}
-          {{ args[0] | int }}
-        {% else %}
-          {{ states('input_number.index_gaz_premier') | int(0) }}
-        {% endif %}
+      idx: "{{ trigger.event.data.args[0] | default('', true) | trim }}"
     actions:
-      - action: premier_energy.send_index
-        data:
-          index: "{{ idx }}"
+      - if:
+          - condition: template
+            value_template: "{{ idx != '' and idx is match('^[0-9]+$') }}"
+        then:
+          - action: telegram_bot.send_message
+            data:
+              config_entry_id: YOUR_TELEGRAM_CONFIG_ENTRY_ID
+              message: "⏳ Trimit index gaze {{ idx }}..."
+          - action: shell_command.premier_send_index
+            data:
+              variables:
+                index: "{{ idx | int }}"
+        else:
+          - action: telegram_bot.send_message
+            data:
+              config_entry_id: YOUR_TELEGRAM_CONFIG_ENTRY_ID
+              message: |
+                🔥 Index gaze Premier
+
+                Trimite: /indexgaze 12345
+                (cifrele de pe contor)

@@ -57,14 +57,21 @@ class PremierApiClient:
         }
 
     def download_invoice_pdf(self, invoice_number: str, dest_dir) -> str | None:
-        """Download invoice PDF (direct sau redirect API)."""
+        """Download invoice PDF (direct, base64 sau redirect API)."""
+        import base64
+
         path = Path(dest_dir) / f"{invoice_number}.pdf"
         try:
             url = f"{API_BASE}/facturi/{invoice_number}/pdf"
             r = requests.get(url, headers=self._headers, timeout=90)
-            if r.status_code == 200 and r.content[:4] == b"%PDF":
-                path.write_bytes(r.content)
-                return str(path)
+            if r.status_code == 200:
+                raw = r.content
+                if raw[:4] == b"%PDF":
+                    path.write_bytes(raw)
+                    return str(path)
+                if raw[:4] == b"JVBE":
+                    path.write_bytes(base64.b64decode(raw))
+                    return str(path)
         except Exception as exc:
             _LOGGER.debug("PDF direct: %s", exc)
         try:

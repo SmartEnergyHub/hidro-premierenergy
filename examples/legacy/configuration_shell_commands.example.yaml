@@ -1,0 +1,23 @@
+# =============================================================================
+# Adaugă în /config/configuration.yaml (secțiunea shell_command:)
+# Necesită scripturile din examples/legacy/ copiate în /config/premier_energy/
+# =============================================================================
+
+shell_command:
+  premier_refresh_token: >
+    export PATH=/usr/bin:/bin:/usr/sbin:/sbin;
+    export CHROMIUM_PATH=/usr/bin/chromium;
+    export CHROMEDRIVER_PATH=/usr/bin/chromedriver;
+    /config/premier_energy/venv/bin/python3 /config/premier_energy/refresh_token_simple.py
+
+  premier_send_last_invoice: >
+    /config/premier_energy/venv/bin/python3 /config/premier_energy/send_last_invoice_telegram.py
+
+  premier_send_index: >
+    /config/premier_energy/venv/bin/python3 /config/premier_energy/send_index.py {{ index }}
+
+  hidro_send_index: >
+    /config/hidroelectrica/venv/bin/python3 /config/hidroelectrica/send_index.py {{ index }}
+
+  hidro_send_last_invoice: >
+    /config/hidroelectrica/venv/bin/python3 /config/hidroelectrica/send_last_invoice_telegram.py

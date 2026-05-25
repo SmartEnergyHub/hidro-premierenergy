@@ -3,6 +3,20 @@
 All notable changes to this project are documented here.
 Format based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [1.1.4] - 2026-05-25
+
+### Added
+- Refresh token Premier pe **HOST via SSH** când integrarea rulează în container HA OS (`lib/host_refresh.py`)
+- Scripturi legacy sanitizate: `refresh_token_simple.py`, `send_index.py`, `send_last_invoice_telegram.py`, `premier_session.py`
+- `scripts/setup-ha-premier-host-ssh.sh` — bootstrap SSH container→host + cron 4h
+- `examples/legacy/README.md`, `premier_secrets.json.example`, `configuration_shell_commands.example.yaml`
+
+### Fixed
+- PDF Premier API returnează **base64** (`JVBERi0…`) — decode în `api_client` și scripturi legacy
+- Telegram HA OS: `telegram_commands.yaml` cu ack „⏳ Procesez...”, `/indexhidro N`, `/indexgaze N`, placeholder `YOUR_TELEGRAM_CONFIG_ENTRY_ID`
+- Eliminat token Telegram / contract real din `examples/legacy/premier_send_index.py`
+- Deploy scripts: fără hostname implicit; `HA_SSH` obligatoriu
+
 ## [1.1.3] - 2026-05-25
 
 ### Added
