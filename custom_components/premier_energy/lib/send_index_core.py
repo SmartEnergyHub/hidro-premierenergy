@@ -32,12 +32,7 @@ def _load_telegram(secrets_dir: Path) -> tuple[str, str]:
 def _loc_payload(coordinator_data: dict[str, Any] | None) -> dict[str, str]:
     locuri = (coordinator_data or {}).get("locuri") or []
     loc = locuri[0] if locuri else {}
-    loc_consum = (
-        loc.get("LocConsum")
-        or loc.get("locConsum")
-        or loc.get("CodLocConsum")
-        or ""
-    )
+    loc_consum = loc.get("LocConsum") or loc.get("locConsum") or loc.get("CodLocConsum") or ""
     contract = str(loc.get("Contract") or loc.get("contract") or loc.get("NumarContract") or "")
     if not loc_consum or not contract:
         raise RuntimeError("locConsum/contract lipsesc — rulează Refresh Premier Energy")

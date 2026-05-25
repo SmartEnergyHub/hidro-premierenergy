@@ -5,7 +5,6 @@ from __future__ import annotations
 from homeassistant.core import HomeAssistant, ServiceCall
 from homeassistant.exceptions import ServiceValidationError
 
-
 DEFAULT_INPUT_ENTITY = "input_number.hidro_index_curent"
 
 

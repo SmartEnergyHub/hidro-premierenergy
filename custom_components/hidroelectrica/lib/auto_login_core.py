@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-import os
 import shutil
 import time
 
@@ -12,9 +11,9 @@ from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
 
+from .common.browser_paths import ensure_browser_deps, resolve_chromedriver, resolve_chromium_bin
 from .common.chromium_lock import ChromiumLock
 from .common.xvfb import ensure_xvfb
-from .common.browser_paths import ensure_browser_deps, resolve_chromedriver, resolve_chromium_bin
 from .config import (
     BROWSER_PROFILE,
     MAX_RETRIES,

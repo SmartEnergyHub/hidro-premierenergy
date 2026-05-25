@@ -52,9 +52,7 @@ class PremierEnergyConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                     browser_profile=storage_dir / "browser_profile",
                     debug_dir=storage_dir / "debug",
                 )
-                await self.hass.async_add_executor_job(
-                    lambda: auth.refresh_token(force=True)
-                )
+                await self.hass.async_add_executor_job(lambda: auth.refresh_token(force=True))
             except BrowserDepsMissingError as err:
                 _LOGGER.error("Premier browser deps missing: %s", err)
                 errors["base"] = "missing_browser"

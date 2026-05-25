@@ -5,9 +5,7 @@ from __future__ import annotations
 import os
 from pathlib import Path
 
-INSTALL_HINT = (
-    "docker exec homeassistant apk add --no-cache chromium chromium-chromedriver xvfb"
-)
+INSTALL_HINT = "docker exec homeassistant apk add --no-cache chromium chromium-chromedriver xvfb"
 
 
 class BrowserDepsMissingError(RuntimeError):

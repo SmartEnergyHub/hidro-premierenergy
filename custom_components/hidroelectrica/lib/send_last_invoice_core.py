@@ -7,7 +7,7 @@ from pathlib import Path
 from typing import Any
 
 from .api_client import download_invoice_pdf
-from .config import DATA_FILE, INVOICES_DIR
+from .config import DATA_FILE
 from .ha_session import ensure_session
 from .hidro_api import fetch_all_portal_data, get_billing_history, load_page, parse_billing_rows
 from .logging_util import setup_logger

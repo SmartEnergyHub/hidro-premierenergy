@@ -108,9 +108,7 @@ class HidroCoordinator(DataUpdateCoordinator[dict[str, Any]]):
 
     async def async_send_index(self, index: int) -> str:
         await self.hass.async_add_executor_job(self._prepare_sync_env)
-        result = await self.hass.async_add_executor_job(
-            lambda: self._send_index_sync(index)
-        )
+        result = await self.hass.async_add_executor_job(lambda: self._send_index_sync(index))
         await self.async_request_refresh()
         return result
 

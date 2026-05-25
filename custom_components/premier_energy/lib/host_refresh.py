@@ -28,7 +28,9 @@ def refresh_via_host() -> bool:
     if not host_ssh_available():
         return False
     if not REFRESH_SCRIPT.is_file() or not VENV_PYTHON.is_file():
-        _LOGGER.warning("Lipsește %s sau venv — vezi scripts/setup-ha-premier-host-ssh.sh", REFRESH_SCRIPT)
+        _LOGGER.warning(
+            "Lipsește %s sau venv — vezi scripts/setup-ha-premier-host-ssh.sh", REFRESH_SCRIPT
+        )
         return False
     cmd = [
         "ssh",

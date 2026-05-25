@@ -5,7 +5,6 @@ from __future__ import annotations
 import json
 import re
 import time
-from pathlib import Path
 from typing import Any
 
 import requests
@@ -70,14 +69,17 @@ def _submit_via_http(index: int, data: dict[str, Any], http: requests.Session) -
 
 
 def _submit_via_selenium(index: int) -> str:
-    import os
 
     from selenium import webdriver
     from selenium.webdriver.chrome.options import Options
     from selenium.webdriver.chrome.service import Service
     from selenium.webdriver.common.by import By
 
-    from .common.browser_paths import ensure_browser_deps, resolve_chromedriver, resolve_chromium_bin
+    from .common.browser_paths import (
+        ensure_browser_deps,
+        resolve_chromedriver,
+        resolve_chromium_bin,
+    )
     from .common.chromium_lock import ChromiumLock
     from .common.xvfb import ensure_xvfb
     from .config import BROWSER_PROFILE
@@ -87,7 +89,12 @@ def _submit_via_selenium(index: int) -> str:
     BROWSER_PROFILE.mkdir(parents=True, exist_ok=True)
     opts = Options()
     opts.binary_location = resolve_chromium_bin()
-    for arg in ("--no-sandbox", "--disable-dev-shm-usage", "--disable-gpu", "--window-size=1920,1080"):
+    for arg in (
+        "--no-sandbox",
+        "--disable-dev-shm-usage",
+        "--disable-gpu",
+        "--window-size=1920,1080",
+    ):
         opts.add_argument(arg)
     opts.add_argument(f"--user-data-dir={BROWSER_PROFILE}")
 
@@ -101,7 +108,9 @@ def _submit_via_selenium(index: int) -> str:
             driver.get(f"{PORTAL_BASE}/{PORTAL_PAGES['self_meter']}")
             time.sleep(4)
             if "txtLogin" in driver.page_source:
-                raise RuntimeError("Sesiune expirată — apasă Re-login forțat înainte de transmitere index")
+                raise RuntimeError(
+                    "Sesiune expirată — apasă Re-login forțat înainte de transmitere index"
+                )
             for sel in ("txtReading", "txtIndex", "txtMeterReading", "MeterReading"):
                 els = driver.find_elements(By.ID, sel)
                 if els:

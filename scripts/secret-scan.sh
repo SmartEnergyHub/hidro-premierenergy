@@ -16,7 +16,7 @@ FORBIDDEN=(
   browser_profile
 )
 for name in "${FORBIDDEN[@]}"; do
-  if git ls-files 2>/dev/null | grep -q "$name"; then
+  if git ls-files 2>/dev/null | grep -E "(^|/)${name}$" | grep -q .; then
     echo "FAIL: tracked file matching *$name*"
     git ls-files | grep "$name" || true
     FAIL=1

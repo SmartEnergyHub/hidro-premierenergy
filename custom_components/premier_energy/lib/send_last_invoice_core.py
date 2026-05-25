@@ -6,12 +6,9 @@ import json
 import logging
 from pathlib import Path
 
-import requests
-
-from ..const import API_BASE
 from .api_client import PremierApiClient
 from .auth_manager import PremierAuthManager
-from .telegram_util import send_telegram, send_telegram_document
+from .telegram_util import send_telegram_document
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -51,7 +48,11 @@ def send_last_invoice_telegram_sync(
     elif not auth.validate_token_via_api(token):
         token = auth.refresh_token()
     client = PremierApiClient(token)
-    data = coordinator_data if coordinator_data and coordinator_data.get("numar_factura") else client.fetch_all()
+    data = (
+        coordinator_data
+        if coordinator_data and coordinator_data.get("numar_factura")
+        else client.fetch_all()
+    )
 
     numar = data.get("numar_factura")
     if not numar:
@@ -72,8 +73,6 @@ def send_last_invoice_telegram_sync(
         f"📊 Consum:\n• {consum_m3} m³\n• {consum_mwh} MWh\n\n"
         f"📄 Factura: {numar}"
     )
-    if not send_telegram_document(
-        telegram_bot_token, telegram_chat_id, Path(pdf_path), caption
-    ):
+    if not send_telegram_document(telegram_bot_token, telegram_chat_id, Path(pdf_path), caption):
         raise RuntimeError("Trimitere Telegram eșuată")
     return str(numar)

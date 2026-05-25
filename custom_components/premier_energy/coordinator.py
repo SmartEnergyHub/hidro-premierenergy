@@ -103,9 +103,7 @@ class PremierCoordinator(DataUpdateCoordinator[dict[str, Any]]):
 
     async def async_send_index(self, index: int) -> str:
         token = await self.hass.async_add_executor_job(self._auth.refresh_token)
-        result = await self.hass.async_add_executor_job(
-            lambda: self._send_index_sync(index, token)
-        )
+        result = await self.hass.async_add_executor_job(lambda: self._send_index_sync(index, token))
         await self.async_request_refresh()
         return result
 
