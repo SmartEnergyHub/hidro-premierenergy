@@ -30,6 +30,59 @@ SUPPORT_LINKS: dict[str, str] = {
     "provider_change": "https://github.com/SmartEnergyHub/hidro-premierenergy/issues/new?template=provider_change.yml",
 }
 
+# Titlu + mesaj notificare HA (fără URL vizibil ca text simplu)
+NOTIFICATIONS: dict[str, tuple[str, str]] = {
+    "donate": (
+        "SmartEnergyHub — Mulțumim! ❤️",
+        "Integrările HA Energie România rămân **gratuite**. Contribuția ta este voluntară "
+        "și susține mentenanța, testarea și noile funcții.\n\n"
+        "👉 [Deschide pagina securizată de donație]({url})",
+    ),
+    "github": (
+        "Hidroelectrica — GitHub",
+        "Cod sursă, release-uri și changelog:\n\n[Deschide repository]({url})",
+    ),
+    "support": (
+        "Hidroelectrica — Support",
+        "Ghid instalare, depanare și export debug:\n\n[Deschide SUPPORT.md]({url})",
+    ),
+    "discussions": (
+        "Hidroelectrica — Discussions",
+        "Întrebări, idei și feedback comunitate:\n\n[Deschide Discussions]({url})",
+    ),
+    "issues": (
+        "Hidroelectrica — Issues",
+        "Raportează o problemă sau cere o funcție:\n\n[Deschide Issues]({url})",
+    ),
+    "bug_report": (
+        "Hidroelectrica — Bug report",
+        "Template pentru raportare bug:\n\n[Deschide formular]({url})",
+    ),
+    "auth_issue": (
+        "Hidroelectrica — Autentificare",
+        "Probleme login / token / sesiune:\n\n[Deschide formular]({url})",
+    ),
+    "feature_request": (
+        "Hidroelectrica — Feature request",
+        "Propune o îmbunătățire:\n\n[Deschide formular]({url})",
+    ),
+    "provider_change": (
+        "Hidroelectrica — Schimbare portal",
+        "Schimbări API / portal furnizor:\n\n[Deschide formular]({url})",
+    ),
+}
+
+DONATE_ENTITY_ICON = "https://raw.githubusercontent.com/SmartEnergyHub/hidro-premierenergy/main/assets/branding/donate-icon.svg"
+
+
+def notification_content(link_key: str, url: str) -> tuple[str, str]:
+    title, template = NOTIFICATIONS.get(
+        link_key,
+        ("Hidroelectrica — Support", "[Deschide link-ul]({url})"),
+    )
+    return title, template.format(url=url)
+
+
 _REDACT_PATTERNS = (
     (re.compile(r"eyJ[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+"), "[REDACTED_JWT]"),
     (re.compile(r"ghp_[A-Za-z0-9]+"), "[REDACTED_TOKEN]"),

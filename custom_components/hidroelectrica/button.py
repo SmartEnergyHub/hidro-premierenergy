@@ -7,8 +7,9 @@ from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity import EntityCategory
 
-from .const import DOMAIN, URL_DONATE
+from .const import DOMAIN
 from .coordinator import HidroCoordinator
+from .lib.support import DONATE_ENTITY_ICON, URL_GITHUB
 
 
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry, async_add_entities) -> None:
@@ -31,7 +32,7 @@ def _device_info(entry: ConfigEntry) -> dict:
         "name": entry.title,
         "manufacturer": "Hidroelectrica",
         "model": "iHidro Portal (energie electrică)",
-        "configuration_url": URL_DONATE,
+        "configuration_url": URL_GITHUB,
     }
 
 
@@ -68,7 +69,8 @@ class HidroSupportDevelopmentButton(ButtonEntity):
     _attr_has_entity_name = True
     _attr_translation_key = "support_development"
     _attr_entity_category = EntityCategory.CONFIG
-    _attr_icon = "mdi:heart-outline"
+    _attr_icon = "mdi:hand-heart"
+    _attr_entity_picture = DONATE_ENTITY_ICON
 
     def __init__(self, coordinator: HidroCoordinator, entry: ConfigEntry) -> None:
         self.coordinator = coordinator

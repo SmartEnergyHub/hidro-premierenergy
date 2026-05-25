@@ -11,10 +11,33 @@
 - [GitHub Discussions](https://github.com/SmartEnergyHub/hidro-premierenergy/discussions)
 - [Issues — raportează problemă](https://github.com/SmartEnergyHub/hidro-premierenergy/issues/new/choose)
 
-### Support Development
-Contribuții voluntare (fără obligație):
+---
 
-**[Support Development](https://paypal.me/solovip)**
+<div align="center">
+
+### 💙 Susține dezvoltarea
+
+Integrările sunt **gratuite**. Contribuția ta este **voluntară** și apreciată.
+
+<br/>
+
+[![Support Development](https://img.shields.io/badge/❤️_Support-Development-6366f1?style=for-the-badge)](https://paypal.me/solovip)
+[![Buy me a coffee](https://img.shields.io/badge/☕_Buy_me_a-Coffee-FFDD00?style=for-the-badge&logo=buy-me-a-coffee&logoColor=black)](https://paypal.me/solovip)
+[![Donate via PayPal](https://img.shields.io/badge/💙_Donate-PayPal-00457C?style=for-the-badge&logo=paypal&logoColor=white)](https://paypal.me/solovip)
+
+<br/>
+
+<a href="https://paypal.me/solovip">
+  <img src="assets/branding/donate-banner.svg" alt="Support SmartEnergyHub development" width="480" />
+</a>
+
+<br/>
+
+<sub>În Home Assistant: apasă **❤️ Support Development** pe dispozitivul integrării.</sub>
+
+</div>
+
+---
 
 ### Export debug din Home Assistant
 1. Integrări → Premier Energy / Hidroelectrica → **Download diagnostics**

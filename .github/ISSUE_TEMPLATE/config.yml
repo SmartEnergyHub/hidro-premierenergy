@@ -1,11 +1,11 @@
 blank_issues_enabled: false
 contact_links:
-  - name: Support Development
+  - name: "❤️ Support Development"
     url: https://paypal.me/solovip
-    about: Contribuții voluntare pentru dezvoltare
-  - name: GitHub Discussions
+    about: Contribuții voluntare — susține SmartEnergyHub (integrări gratuite)
+  - name: "💬 GitHub Discussions"
     url: https://github.com/SmartEnergyHub/hidro-premierenergy/discussions
-    about: Întrebări și feedback comunitate
-  - name: Support Guide
+    about: Întrebări, feedback și idei comunitate
+  - name: "📖 Support Guide"
     url: https://github.com/SmartEnergyHub/hidro-premierenergy/blob/main/SUPPORT.md
-    about: Documentație support și debug export
+    about: Instalare, depanare, export debug redactat

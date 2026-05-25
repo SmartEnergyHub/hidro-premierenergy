@@ -1,10 +1,14 @@
 # HA Energie România — Smart Energy Hub
 
-[![hacs_badge](https://img.shields.io/badge/HACS-Custom-orange.svg)](https://github.com/hacs/integration)
-[![GitHub release](https://img.shields.io/github/v/release/SmartEnergyHub/hidro-premierenergy)](https://github.com/SmartEnergyHub/hidro-premierenergy/releases)
-[![Organization](https://img.shields.io/badge/org-SmartEnergyHub-blue)](https://github.com/SmartEnergyHub)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
-[![Support](https://img.shields.io/badge/Support-Development-ff69b4?style=flat&logo=data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgZmlsbD0iI2ZmNjBjMCIgdmlld0JveD0iMCAwIDE2IDE2Ij48cGF0aCBkPS04IDMuMi4yLjUgMS44IDEuNCAxLjggMy44bDQuNSA0LjUgNC41LTQuNUEyIDIgMCAwIDAgMTQuNSA0LjVhMiAyIDAgMCAwLTMuMS0yTDEwIDUuN2ExIDEgMCAwIDAtMS40IDB6Ii8+PC9zdmc+)](https://paypal.me/solovip)
+<div align="center">
+
+[![hacs_badge](https://img.shields.io/badge/HACS-Custom-orange.svg?style=flat-square)](https://github.com/hacs/integration)
+[![GitHub release](https://img.shields.io/github/v/release/SmartEnergyHub/hidro-premierenergy?style=flat-square)](https://github.com/SmartEnergyHub/hidro-premierenergy/releases)
+[![Organization](https://img.shields.io/badge/org-SmartEnergyHub-0ea5e9?style=flat-square)](https://github.com/SmartEnergyHub)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=flat-square)](LICENSE)
+[![Support Development](https://img.shields.io/badge/❤️_Support-Development-6366f1?style=for-the-badge&logoColor=white)](https://paypal.me/solovip)
+
+</div>
 
 Integrări custom Home Assistant pentru portalurile românești de utilități — **FULL AUTO**, gata de producție.
 
@@ -138,15 +142,46 @@ cp -r /tmp/ha-energie/custom_components/hidroelectrica custom_components/
 
 ---
 
-## Support Development
+---
 
-Contribuții **voluntare** — fără obligație, fără funcții blocate:
+<div align="center">
 
-**[Support Development](https://paypal.me/solovip)**
+<a id="donate"></a>
 
-În Home Assistant: buton **Support Development** pe dispozitivul integrării.
+## 💙 Susține dezvoltarea
 
-Feedback: [GitHub Issues](https://github.com/SmartEnergyHub/hidro-premierenergy/issues/new/choose) · [Discussions](https://github.com/SmartEnergyHub/hidro-premierenergy/discussions)
+Integrările rămân **100% gratuite** — fără paywall, fără funcții blocate.  
+Dacă îți sunt utile, poți susține voluntar proiectul **SmartEnergyHub**.
+
+<br/>
+
+[![Support Development](https://img.shields.io/badge/❤️_Support-Development-6366f1?style=for-the-badge)](https://paypal.me/solovip)
+[![Buy me a coffee](https://img.shields.io/badge/☕_Buy_me_a-Coffee-FFDD00?style=for-the-badge&logo=buy-me-a-coffee&logoColor=black)](https://paypal.me/solovip)
+[![Donate via PayPal](https://img.shields.io/badge/💙_Donate-PayPal-00457C?style=for-the-badge&logo=paypal&logoColor=white)](https://paypal.me/solovip)
+[![Support SmartEnergyHub](https://img.shields.io/badge/🚀_Support-SmartEnergyHub-0ea5e9?style=for-the-badge)](https://paypal.me/solovip)
+
+<br/>
+
+<a href="https://paypal.me/solovip">
+  <img src="assets/branding/donate-banner.svg" alt="Support SmartEnergyHub — HA Energie România" width="520" />
+</a>
+
+<br/>
+
+<sub>Contribuție voluntară · mulțumim comunității · <a href="https://github.com/SmartEnergyHub/hidro-premierenergy/discussions">Discussions</a> · <a href="SUPPORT.md">Support Guide</a></sub>
+
+</div>
+
+---
+
+## Support & Community
+
+| | |
+|---|---|
+| 🐛 **Issues** | [Raportează problemă](https://github.com/SmartEnergyHub/hidro-premierenergy/issues/new/choose) |
+| 💬 **Discussions** | [Comunitate & întrebări](https://github.com/SmartEnergyHub/hidro-premierenergy/discussions) |
+| 📖 **Support Guide** | [SUPPORT.md](SUPPORT.md) |
+| 🏠 **Home Assistant** | Buton **❤️ Support Development** pe dispozitivul integrării (notificare + link securizat) |
 
 ---
 

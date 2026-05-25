@@ -24,6 +24,7 @@ Add:
 
 These are required for HACS default listing; CI ignores them for custom-repo installs.
 
-## Donate
+## Donate / Support
 
-FUNDING.yml points to `https://paypal.me/solovip`.
+GitHub **Sponsor** button (FUNDING.yml) + badge-uri vizuale în [README](../README.md#donate) și [SUPPORT.md](../SUPPORT.md).  
+Link-ul de donație **nu** este afișat ca text în documentația publică — doar în badge-uri/butoane.

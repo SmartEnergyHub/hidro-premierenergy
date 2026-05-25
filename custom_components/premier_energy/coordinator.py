@@ -165,15 +165,16 @@ class PremierCoordinator(DataUpdateCoordinator[dict[str, Any]]):
         return str(path)
 
     async def async_notify_support_link(self, link_key: str) -> str:
-        from .lib.support import SUPPORT_LINKS
+        from .lib.support import SUPPORT_LINKS, notification_content
 
         url = SUPPORT_LINKS.get(link_key, SUPPORT_LINKS["support"])
+        title, message = notification_content(link_key, url)
         await self.hass.services.async_call(
             "persistent_notification",
             "create",
             {
-                "title": "Premier Energy — Support",
-                "message": f"[Deschide link-ul]({url})",
+                "title": title,
+                "message": message,
                 "notification_id": f"{DOMAIN}_support_{link_key}",
             },
         )

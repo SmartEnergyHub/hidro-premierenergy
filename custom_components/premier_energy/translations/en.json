@@ -34,7 +34,7 @@
     "button": {
       "refresh_session": { "name": "Refresh session" },
       "force_login": { "name": "Force re-login" },
-      "support_development": { "name": "Support Development" },
+      "support_development": { "name": "❤️ Support Development" },
       "export_support_bundle": { "name": "Export Support Bundle" },
       "open_github": { "name": "Open GitHub" },
       "report_issue": { "name": "Report Issue" }

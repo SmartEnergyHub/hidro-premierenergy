@@ -3,6 +3,17 @@
 All notable changes to this project are documented here.
 Format based on [Keep a Changelog](https://keepachangelog.com/).
 
+## [1.1.5] - 2026-05-25
+
+### Added
+- Secțiune donate vizuală README + SUPPORT: badge-uri shields.io, banner SVG, card centrat
+- `assets/branding/donate-banner.svg`, `donate-icon.svg` — dark/light friendly
+- Buton HA **❤️ Support Development**: icon `mdi:hand-heart`, `entity_picture`, notificări îmbunătățite
+
+### Changed
+- FUNDING.yml, issue templates, Support Guide — branding SmartEnergyHub consistent
+- Device `configuration_url` → GitHub repo (donate doar pe buton dedicat)
+
 ## [1.1.4] - 2026-05-25
 
 ### Added

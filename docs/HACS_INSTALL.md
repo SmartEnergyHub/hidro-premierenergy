@@ -41,7 +41,7 @@ Dependențe pe HA OS: `chromium`, `chromedriver`, `Xvfb` (Hidro).
 /config/custom_components/hidroelectrica/manifest.json  → version
 ```
 
-Butoane: **Reîmprospătează sesiunea**, **Re-login forțat**, **Support Development**.
+Butoane: **Reîmprospătează sesiunea**, **Re-login forțat**, **❤️ Support Development** (icon dedicat + notificare donate).
 
 Servicii: `premier_energy.refresh_session`, `hidroelectrica.force_login`, etc.
 

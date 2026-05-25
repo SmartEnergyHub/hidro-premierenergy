@@ -34,7 +34,7 @@
     "button": {
       "refresh_session": { "name": "Reîmprospătează sesiunea" },
       "force_login": { "name": "Re-login forțat" },
-      "support_development": { "name": "Support Development" },
+      "support_development": { "name": "❤️ Susține dezvoltarea" },
       "export_support_bundle": { "name": "Export Support Bundle" },
       "open_github": { "name": "Deschide GitHub" },
       "report_issue": { "name": "Raportează problemă" }
